@@ -1,0 +1,25 @@
+{
+  "version": 2,
+  "dgSpecHash": "1M88xjZyGMyEZf+0zlW4QXSAE+5G06znz0dQxk1XMzpT3SA5qfPkg+EAplkUztRWxMH5zzgM58b8Fs0UOoWv7w==",
+  "success": true,
+  "projectFilePath": "F:\\ProjectDD\\2022\\DDStudy2022\\DAL\\DAL.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.0-rc.2.22472.11\\microsoft.entityframeworkcore.7.0.0-rc.2.22472.11.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.0-rc.2.22472.11\\microsoft.entityframeworkcore.abstractions.7.0.0-rc.2.22472.11.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\7.0.0-rc.2.22472.11\\microsoft.entityframeworkcore.analyzers.7.0.0-rc.2.22472.11.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\7.0.0-rc.2.22472.11\\microsoft.entityframeworkcore.relational.7.0.0-rc.2.22472.11.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\7.0.0-rc.2.22472.3\\microsoft.extensions.caching.abstractions.7.0.0-rc.2.22472.3.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.extensions.caching.memory\\7.0.0-rc.2.22472.3\\microsoft.extensions.caching.memory.7.0.0-rc.2.22472.3.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0-rc.2.22472.3\\microsoft.extensions.configuration.abstractions.7.0.0-rc.2.22472.3.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0-rc.2.22472.3\\microsoft.extensions.dependencyinjection.7.0.0-rc.2.22472.3.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0-rc.2.22472.3\\microsoft.extensions.dependencyinjection.abstractions.7.0.0-rc.2.22472.3.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.extensions.logging\\7.0.0-rc.2.22472.3\\microsoft.extensions.logging.7.0.0-rc.2.22472.3.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0-rc.2.22472.3\\microsoft.extensions.logging.abstractions.7.0.0-rc.2.22472.3.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.extensions.options\\7.0.0-rc.2.22472.3\\microsoft.extensions.options.7.0.0-rc.2.22472.3.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0-rc.2.22472.3\\microsoft.extensions.primitives.7.0.0-rc.2.22472.3.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\npgsql\\7.0.0-rc.2\\npgsql.7.0.0-rc.2.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\7.0.0-rc.2\\npgsql.entityframeworkcore.postgresql.7.0.0-rc.2.nupkg.sha512",
+    "C:\\Users\\Sanin2009\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
