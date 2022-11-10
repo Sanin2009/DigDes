@@ -7,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Api.Services;
 using Api.Models;
 using DAL.Entities;
+using Api.Models.Attach;
+using Api.Models.Post;
+using Api.Models.User;
 
 namespace Api.Controllers
 {
@@ -73,7 +76,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<List<CommentModel>> ShowComments(Guid postId)
+        public async Task<List<ShowCommentModel>> ShowComments(Guid postId)
         {
             return await _userService.ShowComments(postId);
         }
@@ -106,6 +109,23 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        public async Task<List<string>> GetAllUserAvatars(Guid userId)
+        {
+            var image = await _userService.GetAllUserAvatars(userId);
+            var result = new List<string>();
+
+            foreach (AttachModel model in image)
+            {
+                var t = model.Id;
+                var urlString = "https://localhost:7191" + "/api/User/GetPostImage?attachId=" + t.ToString();
+                result.Add(urlString);
+            }
+            return result;
+        }
+
+
+
+        [HttpGet]
         public async Task<List<string>> GetPost(Guid postId)
         {
             var image = await _userService.GetPost(postId);
@@ -113,7 +133,6 @@ namespace Api.Controllers
             
             foreach (AttachModel model in image)
             {
-                // HttpResponseMessage httpResponseMessage = await GetPostImage(model.Id);
                 var t = model.Id;
                 var urlString = "https://localhost:7191" + "/api/User/GetPostImage?attachId=" + t.ToString(); 
                 result.Add(urlString);
@@ -122,7 +141,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public async Task<FileResult> GetPostImage(long attachId)
+        public async Task<FileResult> GetPostImage(Guid attachId)
         {
             var attach = await _userService.GetPostImage(attachId);
 
@@ -131,17 +150,17 @@ namespace Api.Controllers
 
 
         [HttpGet]
-        public async Task<FileResult> GetUserAvatar(Guid userId)
+        public async Task<FileResult> GetUserAvatar(Guid attachId)
         {
-            var attach = await _userService.GetUserAvatar(userId);
+            var attach = await _userService.GetUserAvatar(attachId);
 
             return File(System.IO.File.ReadAllBytes(attach.FilePath), attach.MimeType);
         }
 
         [HttpGet]
-        public async Task<FileResult> DownloadAvatar(Guid userId)
+        public async Task<FileResult> DownloadAvatar(Guid avatarId)
         {
-            var attach = await _userService.GetUserAvatar(userId);
+            var attach = await _userService.GetUserAvatar(avatarId);
 
             HttpContext.Response.ContentType = attach.MimeType;
             FileContentResult result = new FileContentResult(System.IO.File.ReadAllBytes(attach.FilePath), attach.MimeType)

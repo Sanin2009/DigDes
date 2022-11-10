@@ -24,13 +24,8 @@ namespace Api.Migrations
 
             modelBuilder.Entity("DAL.Entities.Attach", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
-                    b.Property<Guid>("AuthorId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("FilePath")
@@ -49,8 +44,6 @@ namespace Api.Migrations
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AuthorId");
 
                     b.ToTable("Attaches");
 
@@ -91,9 +84,6 @@ namespace Api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<long?>("AvatarId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTimeOffset>("BirthDay")
                         .HasColumnType("timestamp with time zone");
 
@@ -110,9 +100,6 @@ namespace Api.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AvatarId")
-                        .IsUnique();
 
                     b.HasIndex("Email")
                         .IsUnique();
@@ -175,6 +162,11 @@ namespace Api.Migrations
                 {
                     b.HasBaseType("DAL.Entities.Attach");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("Avatars", (string)null);
                 });
 
@@ -182,23 +174,17 @@ namespace Api.Migrations
                 {
                     b.HasBaseType("DAL.Entities.Attach");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("UserPostId")
                         .HasColumnType("uuid");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("UserPostId");
 
                     b.ToTable("PostImages");
-                });
-
-            modelBuilder.Entity("DAL.Entities.Attach", b =>
-                {
-                    b.HasOne("DAL.Entities.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("DAL.Entities.Comment", b =>
@@ -218,15 +204,6 @@ namespace Api.Migrations
                     b.Navigation("User");
 
                     b.Navigation("UserPost");
-                });
-
-            modelBuilder.Entity("DAL.Entities.User", b =>
-                {
-                    b.HasOne("DAL.Entities.Avatar", "Avatar")
-                        .WithOne("User")
-                        .HasForeignKey("DAL.Entities.User", "AvatarId");
-
-                    b.Navigation("Avatar");
                 });
 
             modelBuilder.Entity("DAL.Entities.UserPost", b =>
@@ -258,6 +235,14 @@ namespace Api.Migrations
                         .HasForeignKey("DAL.Entities.Avatar", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("DAL.Entities.User", "User")
+                        .WithMany("Avatar")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DAL.Entities.PostImage", b =>
@@ -268,17 +253,27 @@ namespace Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DAL.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DAL.Entities.UserPost", "UserPost")
                         .WithMany("PostImages")
                         .HasForeignKey("UserPostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("User");
+
                     b.Navigation("UserPost");
                 });
 
             modelBuilder.Entity("DAL.Entities.User", b =>
                 {
+                    b.Navigation("Avatar");
+
                     b.Navigation("Comments");
 
                     b.Navigation("Sessions");
@@ -291,12 +286,6 @@ namespace Api.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("PostImages");
-                });
-
-            modelBuilder.Entity("DAL.Entities.Avatar", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

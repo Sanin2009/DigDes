@@ -1,13 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Api.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class newinitFixedAndAddNewPleaseWorkThisTime : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,34 +15,15 @@ namespace Api.Migrations
                 name: "Attaches",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     MimeType = table.Column<string>(type: "text", nullable: false),
                     FilePath = table.Column<string>(type: "text", nullable: false),
-                    Size = table.Column<long>(type: "bigint", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Size = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Attaches", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Avatars",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Avatars", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Avatars_Attaches_Id",
-                        column: x => x.Id,
-                        principalTable: "Attaches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -54,33 +34,51 @@ namespace Api.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     PasswordHash = table.Column<string>(type: "text", nullable: false),
-                    BirthDay = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    AvatarId = table.Column<long>(type: "bigint", nullable: true)
+                    BirthDay = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Users_Avatars_AvatarId",
-                        column: x => x.AvatarId,
-                        principalTable: "Avatars",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserPost",
+                name: "Avatars",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Avatars", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Avatars_Attaches_Id",
+                        column: x => x.Id,
+                        principalTable: "Attaches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Avatars_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserPosts",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
-                    name = table.Column<string>(type: "text", nullable: false)
+                    Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserPost", x => x.Id);
+                    table.PrimaryKey("PK_UserPosts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserPost_Users_UserId",
+                        name: "FK_UserPosts_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -122,9 +120,9 @@ namespace Api.Migrations
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_UserPost_UserPostId",
+                        name: "FK_Comments_UserPosts_UserPostId",
                         column: x => x.UserPostId,
-                        principalTable: "UserPost",
+                        principalTable: "UserPosts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -139,7 +137,8 @@ namespace Api.Migrations
                 name: "PostImages",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     UserPostId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -152,17 +151,23 @@ namespace Api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PostImages_UserPost_UserPostId",
+                        name: "FK_PostImages_UserPosts_UserPostId",
                         column: x => x.UserPostId,
-                        principalTable: "UserPost",
+                        principalTable: "UserPosts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostImages_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attaches_AuthorId",
-                table: "Attaches",
-                column: "AuthorId");
+                name: "IX_Avatars_UserId",
+                table: "Avatars",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_UserId",
@@ -175,20 +180,19 @@ namespace Api.Migrations
                 column: "UserPostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PostImages_UserId",
+                table: "PostImages",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PostImages_UserPostId",
                 table: "PostImages",
                 column: "UserPostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserPost_UserId",
-                table: "UserPost",
+                name: "IX_UserPosts_UserId",
+                table: "UserPosts",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_AvatarId",
-                table: "Users",
-                column: "AvatarId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -206,22 +210,13 @@ namespace Api.Migrations
                 name: "IX_UserSessions_UserId",
                 table: "UserSessions",
                 column: "UserId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Attaches_Users_AuthorId",
-                table: "Attaches",
-                column: "AuthorId",
-                principalTable: "Users",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Attaches_Users_AuthorId",
-                table: "Attaches");
+            migrationBuilder.DropTable(
+                name: "Avatars");
 
             migrationBuilder.DropTable(
                 name: "Comments");
@@ -233,16 +228,13 @@ namespace Api.Migrations
                 name: "UserSessions");
 
             migrationBuilder.DropTable(
-                name: "UserPost");
+                name: "Attaches");
+
+            migrationBuilder.DropTable(
+                name: "UserPosts");
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "Avatars");
-
-            migrationBuilder.DropTable(
-                name: "Attaches");
         }
     }
 }

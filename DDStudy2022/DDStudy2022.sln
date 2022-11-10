@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "DDStudy2022\Api.csproj", "{D42B5975-2039-44F2-9F53-EF9AD093C452}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api", "DDStudy2022\Api.csproj", "{D42B5975-2039-44F2-9F53-EF9AD093C452}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{228DC299-3C3D-4356-B4F1-26FBA6DD4CF9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{228DC299-3C3D-4356-B4F1-26FBA6DD4CF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{46B43F61-1A5B-4727-802B-15428E088313}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAL", "DAL\DAL.csproj", "{46B43F61-1A5B-4727-802B-15428E088313}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

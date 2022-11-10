@@ -1,4 +1,6 @@
-﻿namespace Api.Models
+﻿using Api.Models.Attach;
+
+namespace Api.Models.Post
 {
     public class CreatePostModel
     {

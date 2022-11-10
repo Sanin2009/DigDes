@@ -1,18 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Api.Models
+namespace Api.Models.User
 {
     public class CreateUserModel
     {
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Email { get; set; } 
+        public string Email { get; set; }
         [Required]
         public string Password { get; set; }
         [Required]
         [Compare(nameof(Password))]
-        public string RetryPassword { get; set; } 
+        public string RetryPassword { get; set; }
         [Required]
         public DateTimeOffset BirthDay { get; set; }
 
@@ -23,6 +23,6 @@ namespace Api.Models
             Password = password;
             RetryPassword = retryPassword;
             BirthDay = birthDay;
-        }   
+        }
     }
 }
