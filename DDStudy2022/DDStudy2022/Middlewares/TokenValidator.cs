@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Api
+namespace Api.Middlewares
 {
     public class TokenValidatorMiddleware
     {

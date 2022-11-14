@@ -1,5 +1,6 @@
 using Api;
 using Api.Configs;
+using Api.Middlewares;
 using Api.Services;
 using DAL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

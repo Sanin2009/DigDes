@@ -1,4 +1,5 @@
 ﻿using Api.Models.Attach;
+using Api.Models.Post;
 using Api.Models.User;
 using AutoMapper;
 using Common;
@@ -20,6 +21,8 @@ namespace Api
             CreateMap<DAL.Entities.Avatar, AttachModel>();
 
             CreateMap<DAL.Entities.Attach, AttachModel>();
+
+            CreateMap<DAL.Entities.UserPost, ShowPostModel>();
 
         }
 

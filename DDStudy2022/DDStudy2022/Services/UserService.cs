@@ -1,6 +1,7 @@
 ﻿using Api.Configs;
-using Api.Models;
 using Api.Models.Attach;
+using Api.Models.Comment;
+using Api.Models.Post;
 using Api.Models.Token;
 using Api.Models.User;
 using AutoMapper;
@@ -99,7 +100,7 @@ namespace Api.Services
             {
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == temp.UserId);
                 if (user == null) break;
-                var comment = new ShowCommentModel(temp.Id, user.Name, temp.Message, temp.Created);
+                var comment = new ShowCommentModel(temp.Id, user.Name, temp.Message, temp.Created, LinkHelper.Avatar(user.Id));
                 result.Add(comment);
             }
             return result;
@@ -121,41 +122,66 @@ namespace Api.Services
             await _context.SaveChangesAsync();
         }
 
-        
-
         public async Task<List<AttachModel>> GetAllUserAvatars(Guid userId)
         {
             return await _context.Avatars.Where(x=>x.UserId ==userId).AsNoTracking().ProjectTo<AttachModel>(_mapper.ConfigurationProvider).ToListAsync(); //. Aggregate(x => x.Id == postId);
         }
 
-        public async Task<List<AttachModel>> GetPost(Guid postId)
+        public async Task<ShowPostModel> GetPostInfo(Guid postId)
         {
-            return await _context.PostImages.Include(x => x.UserPost).Where(x =>x.UserPostId == postId).AsNoTracking().ProjectTo<AttachModel>(_mapper.ConfigurationProvider).ToListAsync(); //. Aggregate(x => x.Id == postId);
+            var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
+            if (post == null) throw new Exception("Post not found");
+            var attaches = await _context.PostImages.Where(x => x.UserPostId == postId).ToListAsync();
+            var attachLinks = new List<string>();
+            foreach (var attachment in attaches)
+            {
+                attachLinks.Add(LinkHelper.Attach(attachment.Id));
+            }
+            var result = new ShowPostModel(post.Id, post.UserId, post.Created, post.Name,attachLinks);
+            return result;
+            //return await _context.PostImages.Include(x => x.UserPost).Where(x =>x.UserPostId == postId).AsNoTracking().ProjectTo<AttachModel>(_mapper.ConfigurationProvider).ToListAsync(); //. Aggregate(x => x.Id == postId);
         }
 
-        public async Task<List<UserPost>> GetIdPosts()
+        public async Task<ShowFullPostModel> GetPost(Guid postId)
         {
-            return await _context.UserPosts.ToListAsync();
+            var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
+            if (post == null) throw new Exception("Post not found");
+            var t1 = await GetPostInfo(postId);
+            var t2 = await GetUser(post.UserId);
+            var t3 = await ShowComments(postId);
+            return new ShowFullPostModel(t1,t2,t3);
         }
 
-        public async Task<AttachModel> GetPostImage(Guid attachId)
+        public async Task<List<ShowFullPostModel>> GetIdPosts(int skip, int take)
+        {
+            var temp = await _context.UserPosts.OrderByDescending(x=>x.Created).Skip(skip).Take(take).ToListAsync();
+            var result = new List<ShowFullPostModel>();
+            foreach (UserPost u in temp)
+            {
+                var t = await GetPost(u.Id);
+                result.Add(t);
+            }
+            return result;
+        }
+
+        public async Task<AttachModel> GetAttach(Guid attachId)
         {
             var attachT = await _context.Attaches.FirstOrDefaultAsync(x => x.Id == attachId);
             //var user = await GetUserById(userId);
             var attach = _mapper.Map<AttachModel>(attachT);
-            if (attach == null) throw new Exception("image not found");
+            if (attach == null) throw new Exception("attach not found");
             return attach;
         }
 
-        public async Task<AttachModel> GetUserAvatar(Guid attachId)
-        {
-            var user = await _context.Avatars.FirstOrDefaultAsync(x => x.Id == attachId);
-            if (user == null) throw new Exception("user not found");
-            //var user = await GetUserById(userId);
-            var attach = _mapper.Map<AttachModel>(user);
-            if (attach == null) throw new Exception("avatar not found");
-            return attach;
-        }
+        //public async Task<AttachModel> GetUserAvatar(Guid attachId)
+        //{
+        //    var user = await _context.Avatars.FirstOrDefaultAsync(x => x.Id == attachId);
+        //    if (user == null) throw new Exception("user not found");
+        //    //var user = await GetUserById(userId);
+        //    var attach = _mapper.Map<AttachModel>(user);
+        //    if (attach == null) throw new Exception("avatar not found");
+        //    return attach;
+        //}
 
         public async Task Delete(Guid id)
         {
