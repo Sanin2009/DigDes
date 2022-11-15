@@ -61,11 +61,13 @@ internal class Program
             options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql"), sql => { });
         }, contextLifetime: ServiceLifetime.Scoped);
 
-
+     
 
         builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
         builder.Services.AddScoped<UserService>();
+        builder.Services.AddScoped<AuthService>();
+        builder.Services.AddScoped<PostService>();
 
         builder.Services.AddAuthentication(o =>
         {
@@ -84,7 +86,7 @@ internal class Program
                 IssuerSigningKey = authConfig.SymmetricSecurityKey(),
                 ClockSkew = TimeSpan.Zero,
             };
-
+            
         });
 
         builder.Services.AddAuthorization(o =>
@@ -96,7 +98,10 @@ internal class Program
             });
         });
 
+        
+
         var app = builder.Build();
+
 
         using (var serviceScope = ((IApplicationBuilder)app).ApplicationServices.GetService<IServiceScopeFactory>()?.CreateScope())
         {

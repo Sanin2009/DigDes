@@ -1,6 +1,8 @@
-﻿using Api.Models.Attach;
+﻿using Api.Consts;
+using Api.Models.Attach;
 using Api.Services;
 using Common;
+using Common.Extentions;
 using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,10 +16,12 @@ namespace Api.Controllers
     public class AttachController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly PostService _postService;
 
-        public AttachController(UserService userService)
+        public AttachController(UserService userService, PostService postService)
         {
             _userService = userService;
+            _postService = postService; 
         }
 
         [HttpPost]
@@ -31,31 +35,12 @@ namespace Api.Controllers
             return res;
         }
 
-        [HttpGet]
-        public async Task<FileResult> GetAttach(Guid attachId)
-        {
-            // Access check (may be?)
-            var attach = await _userService.GetAttach(attachId);
-
-            return File(System.IO.File.ReadAllBytes(attach.FilePath), attach.MimeType);
-        }
-
-        [HttpGet]
-        public async Task<FileResult> GetUserAvatar(Guid userId)
-        {
-            // Access all avatars
-            var attach = await _userService.GetAllUserAvatars(userId);
-            //var attach = await _userService.GetAttach(attachId);
-            //return [0], I think
-            return File(System.IO.File.ReadAllBytes(attach[0].FilePath), attach[0].MimeType);
-        }
-
         [HttpPost]
         [Authorize]
         public async Task AddAvatarToUser(MetadataModel model)
         {
-            var userIdString = User.Claims.FirstOrDefault(x => x.Type == "id")?.Value;
-            if (Guid.TryParse(userIdString, out var userId))
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            if (userId == default)
             {
                 var tempFi = new FileInfo(Path.Combine(Path.GetTempPath(), model.TempId.ToString()));
                 if (!tempFi.Exists)
@@ -78,6 +63,22 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        public async Task<FileResult> GetAttach(Guid attachId)
+        {
+            // Access check (may be?)
+            var attach = await _postService.GetAttach(attachId);
+            return File(System.IO.File.ReadAllBytes(attach.FilePath), attach.MimeType);
+        }
+
+        [HttpGet]
+        public async Task<FileResult> GetUserAvatar(Guid userId)
+        {
+            // Access all avatars check, may be?
+            var attach = await _userService.GetAllUserAvatars(userId);
+            return File(System.IO.File.ReadAllBytes(attach[0].FilePath), attach[0].MimeType);
+        }
+
+        [HttpGet]
         public async Task<List<string>> GetAllUserAvatars(Guid userId)
         {
             // Access check (may be?)
@@ -85,12 +86,7 @@ namespace Api.Controllers
             var result = new List<string>();
 
             foreach (AttachModel model in image)
-            {
                 result.Add(LinkHelper.Attach(model.Id));
-                //var t = model.Id;
-                //var urlString = "https://localhost:7191" + "/api/User/GetAttach?attachId=" + t.ToString();
-                //result.Add(urlString);
-            }
             return result;
         }
 

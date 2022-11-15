@@ -10,6 +10,8 @@ using Api.Models.Attach;
 using Api.Models.Post;
 using Api.Models.User;
 using Api.Models.Comment;
+using Api.Consts;
+using Common.Extentions;
 
 namespace Api.Controllers
 {
@@ -24,36 +26,6 @@ namespace Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
-        public async Task CreateUser(CreateUserModel model)
-        {
-            if (await _userService.CheckUserExist(model.Email))
-                throw new Exception("user doesn't exist");
-            await _userService.CreateUser(model);
-
-        }
-        
-
-
-
-
-
-
-
-        //[HttpGet]
-        //public async Task<FileResult> DownloadAvatar(Guid avatarId)
-        //{
-        //    var attach = await _userService.GetUserAvatar(avatarId);
-
-        //    HttpContext.Response.ContentType = attach.MimeType;
-        //    FileContentResult result = new FileContentResult(System.IO.File.ReadAllBytes(attach.FilePath), attach.MimeType)
-        //    {
-        //        FileDownloadName = attach.Name
-        //    };
-
-        //    return result;
-        //}
-
         [HttpGet]
         [Authorize]
         public async Task<List<UserModel>> GetUsers() => await _userService.GetUsers();
@@ -62,15 +34,8 @@ namespace Api.Controllers
         [Authorize]
         public async Task<UserModel> GetCurrentUser()
         {
-            var userIdString = User.Claims.FirstOrDefault(x => x.Type == "id")?.Value;
-            if (Guid.TryParse(userIdString, out var userId))
-            {
-
-                return await _userService.GetUser(userId);
-            }
-            else
-                throw new Exception("you are not authorized");
-
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.GetUser(userId);
         }
     }
 }
