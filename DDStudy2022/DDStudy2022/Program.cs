@@ -24,6 +24,7 @@ internal class Program
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
+
         builder.Services.AddSwaggerGen(c =>
         {
             c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
@@ -61,12 +62,12 @@ internal class Program
             options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql"), sql => { });
         }, contextLifetime: ServiceLifetime.Scoped);
 
-     
-
         builder.Services.AddAutoMapper(typeof(MapperProfile).Assembly);
 
         builder.Services.AddScoped<UserService>();
+
         builder.Services.AddScoped<AuthService>();
+
         builder.Services.AddScoped<PostService>();
 
         builder.Services.AddAuthentication(o =>
@@ -98,7 +99,7 @@ internal class Program
             });
         });
 
-        
+ 
 
         var app = builder.Build();
 
@@ -124,6 +125,9 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseTokenValidator();
+
+        app.UseGlobalErrorWrapper();
+
         app.MapControllers();
 
         app.Run();

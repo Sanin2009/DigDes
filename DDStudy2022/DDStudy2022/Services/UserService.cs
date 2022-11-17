@@ -34,9 +34,7 @@ namespace Api.Services
 
         public async Task<bool> CheckUserExist(string email)
         {
-
             return await _context.Users.AnyAsync(x => x.Email.ToLower() == email.ToLower());
-
         }
 
         public async Task AddAvatarToUser(Guid userId, MetadataModel meta, string filePath)
@@ -89,7 +87,7 @@ namespace Api.Services
         {
             var user = await _context.Users.Include(x => x.Avatar).FirstOrDefaultAsync(x => x.Id == id);
             if (user == null)
-                throw new Exception("user not found");
+                throw new NotFound("user");
             return user;
         }
         public async Task<UserModel> GetUser(Guid id)

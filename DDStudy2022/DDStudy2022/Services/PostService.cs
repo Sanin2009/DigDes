@@ -27,8 +27,7 @@ namespace Api.Services
         public async Task<UserPost> CreatePost(Guid userId, string Title)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            if (user == null) throw new Exception("user not found");
-            //var newpost = new UserPost { UserId=userId, Name=Title, Created=DateTimeOffset.Now};
+            if (user == null) throw new NotFound("user");
             var newpost = await _context.UserPosts.AddAsync(new DAL.Entities.UserPost
             {
                 UserId = userId,
@@ -46,8 +45,8 @@ namespace Api.Services
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
-            if (user == null) throw new Exception("user not found");
-            if (post == null) throw new Exception("post not found");
+            if (user == null) throw new NotFound("user");
+            if (post == null) throw new NotFound("post");
             var newcomment = await _context.Comments.AddAsync(new DAL.Entities.Comment
             {
                 User = user,
@@ -63,23 +62,13 @@ namespace Api.Services
 
         public async Task<List<ShowCommentModel>> ShowComments(Guid postId)
         {
-            var t = await _context.Comments.Where(x => x.UserPostId == postId).AsNoTracking().ProjectTo<ShowCommentModel>(_mapper.ConfigurationProvider).ToListAsync();
-            return t;
-            //var result = new List<ShowCommentModel>();
-            //foreach (var temp in t)
-            //{
-            //    var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == temp.UserId);
-            //    if (user == null) break;
-            //    var comment = new ShowCommentModel(temp.Id, user.Name, temp.Message, temp.Created, LinkHelper.Avatar(user.Id));
-            //    result.Add(comment);
-            //}
-            //return result;
+            return await _context.Comments.Where(x => x.UserPostId == postId).AsNoTracking().ProjectTo<ShowCommentModel>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         public async Task AddImageToPost(Guid userId, UserPost postId, MetadataModel model, string filepath)
         {
             var user = await _context.Users.Include(x => x.Avatar).FirstOrDefaultAsync(x => x.Id == userId);
-            if (user == null) throw new Exception("User not found");
+            if (user == null) throw new NotFound("user");
             var newimage = await _context.PostImages.AddAsync(new DAL.Entities.PostImage
             {
                 UserPostId = postId.Id,
@@ -95,7 +84,7 @@ namespace Api.Services
         public async Task<ShowPostModel> GetPostInfo(Guid postId)
         {
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
-            if (post == null) throw new Exception("Post not found");
+            if (post == null) throw new NotFound("post");
             var attaches = await _context.PostImages.Where(x => x.UserPostId == postId).ToListAsync();
             var attachLinks = new List<string>();
             foreach (var attachment in attaches)
@@ -104,13 +93,12 @@ namespace Api.Services
             }
             var result = new ShowPostModel(post.Id, post.UserId, post.Created, post.Name, attachLinks);
             return result;
-            //return await _context.PostImages.Include(x => x.UserPost).Where(x =>x.UserPostId == postId).AsNoTracking().ProjectTo<AttachModel>(_mapper.ConfigurationProvider).ToListAsync(); //. Aggregate(x => x.Id == postId);
         }
 
         public async Task<ShowFullPostModel> GetPost(Guid postId)
         {
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
-            if (post == null) throw new Exception("Post not found");
+            if (post == null) throw new NotFound("post");
             var t1 = await GetPostInfo(postId);
             var t2 = await GetUser(post.UserId);
             var t3 = await ShowComments(postId);
@@ -139,16 +127,15 @@ namespace Api.Services
         public async Task<AttachModel> GetAttach(Guid attachId)
         {
             var attachT = await _context.Attaches.FirstOrDefaultAsync(x => x.Id == attachId);
-            //var user = await GetUserById(userId);
             var attach = _mapper.Map<AttachModel>(attachT);
-            if (attach == null) throw new Exception("attach not found");
+            if (attach == null) throw new NotFound("attach");
             return attach;
         }
         private async Task<DAL.Entities.User> GetUserById(Guid id)
         {
             var user = await _context.Users.Include(x => x.Avatar).FirstOrDefaultAsync(x => x.Id == id);
             if (user == null)
-                throw new Exception("user not found");
+                throw new NotFound("user");
             return user;
         }
 

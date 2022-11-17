@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Controllers
 {
@@ -44,7 +45,7 @@ namespace Api.Controllers
             {
                 var tempFi = new FileInfo(Path.Combine(Path.GetTempPath(), model.TempId.ToString()));
                 if (!tempFi.Exists)
-                    throw new Exception("file not found");
+                    throw new NotFound("file");
                 else
                 {
                     var path = Path.Combine(Directory.GetCurrentDirectory(), "attaches", model.TempId.ToString());
@@ -58,7 +59,7 @@ namespace Api.Controllers
                 }
             }
             else
-                throw new Exception("you are not authorized");
+                throw new NoAccess();
 
         }
 
@@ -73,9 +74,10 @@ namespace Api.Controllers
         [HttpGet]
         public async Task<FileResult> GetUserAvatar(Guid userId)
         {
-            // Access all avatars check, may be?
+            // Free access
             var attach = await _userService.GetAllUserAvatars(userId);
-            return File(System.IO.File.ReadAllBytes(attach[0].FilePath), attach[0].MimeType);
+            if (attach.IsNullOrEmpty()) return File(System.IO.File.ReadAllBytes("F:\\ProjectDD\\2022\\DDStudy2022\\DDStudy2022\\attaches\\404"), "image/jpeg");
+            else return File(System.IO.File.ReadAllBytes(attach[0].FilePath), attach[0].MimeType);
         }
 
         [HttpGet]

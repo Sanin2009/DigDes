@@ -56,7 +56,7 @@ namespace Api.Services
                 || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
                 StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new SecurityTokenException("invalid token");
+                throw new BadRequest();
             }
 
             if (principal.Claims.FirstOrDefault(x => x.Type == "refreshToken")?.Value is String refreshIdString
@@ -66,7 +66,7 @@ namespace Api.Services
                 var session = await GetSessionByRefreshToken(refreshId);
                 if (!session.IsActive)
                 {
-                    throw new Exception("session is not active");
+                    throw new NoAccess();
                 }
 
 
@@ -77,7 +77,7 @@ namespace Api.Services
             }
             else
             {
-                throw new SecurityTokenException("invalid token");
+                throw new BadRequest();
             }
         }
         public async Task<UserSession> GetSessionById(Guid id)
@@ -85,7 +85,7 @@ namespace Api.Services
             var session = await _context.UserSessions.FirstOrDefaultAsync(x => x.Id == id);
             if (session == null)
             {
-                throw new Exception("session is not found");
+                throw new NoAccess();
             }
             return session;
         }
@@ -94,10 +94,10 @@ namespace Api.Services
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == login.ToLower());
             if (user == null)
-                throw new Exception("user not found");
+                throw new NotFound("User");
 
             if (!HashHelper.Verify(pass, user.PasswordHash))
-                throw new Exception("password is incorrect");
+                throw new BadRequest();
 
             return user;
         }
@@ -108,7 +108,7 @@ namespace Api.Services
                 .FirstOrDefaultAsync(x => x.RefreshToken == refreshTokenId);
             if (session == null)
             {
-                throw new Exception("session is not found");
+                throw new NotFound("session");
             }
             return session;
         }
@@ -117,7 +117,7 @@ namespace Api.Services
         {
             var dtNow = DateTime.Now;
             if (session.User == null)
-                throw new Exception("not found");
+                throw new NotFound("session");
 
             var jwt = new JwtSecurityToken(
                 issuer: _config.Issuer,
