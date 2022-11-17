@@ -1,4 +1,5 @@
 ﻿using Api.Models.Attach;
+using Api.Models.Comment;
 using Api.Models.Post;
 using Api.Models.User;
 using AutoMapper;
@@ -23,6 +24,9 @@ namespace Api
             CreateMap<DAL.Entities.Attach, AttachModel>();
 
             CreateMap<DAL.Entities.UserPost, ShowPostModel>();
+
+            CreateMap<DAL.Entities.Comment, ShowCommentModel>()
+                .ForMember(d=>d.AvatarLink, m=>m.MapFrom(s=>LinkHelper.Avatar(s.UserId)));
 
         }
 

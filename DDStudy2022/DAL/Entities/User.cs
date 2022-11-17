@@ -13,6 +13,10 @@ namespace DAL.Entities
         public string Email { get; set; } = "empty";
         public string PasswordHash { get; set; } = "empty"; 
         public DateTimeOffset BirthDay { get; set; }
+        public DateTimeOffset LastActive { get; set; } = DateTimeOffset.UtcNow;
+        public bool IsOpen { get; set; } = true;
+        public bool IsActive { get; set; } = true;
+        public string? Status { get; set; }
         public virtual ICollection<Avatar>? Avatar { get; set; }
         public virtual ICollection<UserSession>? Sessions { get; set; }
         public virtual ICollection<Comment>? Comments { get; set; }   

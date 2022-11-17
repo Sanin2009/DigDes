@@ -4,6 +4,7 @@ using Api.Models.Comment;
 using Api.Models.Post;
 using Api.Models.User;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common;
 using DAL;
 using DAL.Entities;
@@ -54,6 +55,7 @@ namespace Api.Services
                 Created = DateTime.UtcNow,
                 Id = Guid.NewGuid(),
                 Message = msg,
+                Name = user.Name
             });
             await _context.SaveChangesAsync();
             return newcomment.Entity;
@@ -61,16 +63,17 @@ namespace Api.Services
 
         public async Task<List<ShowCommentModel>> ShowComments(Guid postId)
         {
-            var t = await _context.Comments.Where(x => x.UserPostId == postId).ToListAsync();
-            var result = new List<ShowCommentModel>();
-            foreach (var temp in t)
-            {
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == temp.UserId);
-                if (user == null) break;
-                var comment = new ShowCommentModel(temp.Id, user.Name, temp.Message, temp.Created, LinkHelper.Avatar(user.Id));
-                result.Add(comment);
-            }
-            return result;
+            var t = await _context.Comments.Where(x => x.UserPostId == postId).AsNoTracking().ProjectTo<ShowCommentModel>(_mapper.ConfigurationProvider).ToListAsync();
+            return t;
+            //var result = new List<ShowCommentModel>();
+            //foreach (var temp in t)
+            //{
+            //    var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == temp.UserId);
+            //    if (user == null) break;
+            //    var comment = new ShowCommentModel(temp.Id, user.Name, temp.Message, temp.Created, LinkHelper.Avatar(user.Id));
+            //    result.Add(comment);
+            //}
+            //return result;
         }
 
         public async Task AddImageToPost(Guid userId, UserPost postId, MetadataModel model, string filepath)

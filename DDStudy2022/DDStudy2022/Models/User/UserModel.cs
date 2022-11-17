@@ -9,13 +9,15 @@ namespace Api.Models.User
         public string Email { get; set; }
         public DateTimeOffset BirthDay { get; set; }
         public string? AvatarLink { get; set; }
-        public UserModel(Guid id, string name, string email, DateTimeOffset birthDay)
+        public string? Status { get; set; }
+        public UserModel(Guid id, string name, string email, DateTimeOffset birthDay, string? status)
         {
             Id = id;
             Name = name;
             Email = email;
             BirthDay = birthDay;
             AvatarLink = LinkHelper.Avatar(id);
+            Status = status;
         }
     }
 }
