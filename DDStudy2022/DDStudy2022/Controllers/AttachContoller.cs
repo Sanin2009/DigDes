@@ -64,6 +64,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<FileResult> GetAttach(Guid attachId)
         {
             // Access check (may be?)
@@ -72,21 +73,22 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<FileResult> GetUserAvatar(Guid userId)
         {
             // Free access
             var attach = await _userService.GetAllUserAvatars(userId);
-            if (attach.IsNullOrEmpty()) return File(System.IO.File.ReadAllBytes("F:\\ProjectDD\\2022\\DDStudy2022\\DDStudy2022\\attaches\\404"), "image/jpeg");
+            if (attach.IsNullOrEmpty()) return File(System.IO.File.ReadAllBytes(Directory.GetCurrentDirectory() + "\\attaches\\404"), "image/jpeg");
             else return File(System.IO.File.ReadAllBytes(attach[0].FilePath), attach[0].MimeType);
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<List<string>> GetAllUserAvatars(Guid userId)
         {
             // Access check (may be?)
             var image = await _userService.GetAllUserAvatars(userId);
             var result = new List<string>();
-
             foreach (AttachModel model in image)
                 result.Add(LinkHelper.Attach(model.Id));
             return result;

@@ -28,7 +28,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<List<UserModel>> GetUsers() => await _userService.GetUsers();
+        public async Task<List<UserModel>> SearchUsers(string? name) => await _userService.GetUsers(name);
 
         [HttpGet]
         [Authorize]
@@ -36,6 +36,14 @@ namespace Api.Controllers
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _userService.GetUser(userId);
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<string?> UpdateStatus(string? status)
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.UpdateStatus(userId, status);
         }
     }
 }

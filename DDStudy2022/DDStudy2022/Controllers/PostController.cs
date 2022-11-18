@@ -9,6 +9,7 @@ using DAL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace Api.Controllers
 {
@@ -61,21 +62,48 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<List<ShowCommentModel>> ShowComments(Guid postId)
         {
             return await _postService.ShowComments(postId);
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<List<ShowFullPostModel>> GetAllPosts(int skip = 0, int take = 10)
         {
             return await _postService.GetAllPosts(skip, take);
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<ShowFullPostModel> GetPost(Guid postId)
         {
             return await _postService.GetPost(postId);
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task EditComment(Guid commentId, string msg)
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            await _postService.EditComment(userId, commentId, msg);
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task DeletePost(Guid postId)
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            await _postService.DeletePost(userId, postId);
+        }
+
+        [HttpDelete]
+        [Authorize]
+        public async Task DeleteComment(Guid commentId)
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            await _postService.DeleteComment(userId, commentId);
         }
 
     }

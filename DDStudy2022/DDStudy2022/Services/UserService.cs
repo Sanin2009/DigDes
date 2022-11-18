@@ -37,6 +37,20 @@ namespace Api.Services
             return await _context.Users.AnyAsync(x => x.Email.ToLower() == email.ToLower());
         }
 
+        public async Task<bool> CheckNameExist(string name)
+        {
+            return await _context.Users.AnyAsync(x => x.Name.ToLower() == name.ToLower());
+        }
+
+        public async Task<string?> UpdateStatus( Guid userId, string? status)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null) throw new NotFound("user");
+            user.Status = status;
+            await _context.SaveChangesAsync();
+            return status;
+        }
+
         public async Task AddAvatarToUser(Guid userId, MetadataModel meta, string filePath)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
@@ -50,7 +64,6 @@ namespace Api.Services
                     Name = meta.Name, 
                     Size = meta.Size 
                 });
-
                 await _context.SaveChangesAsync();
             }
 
@@ -78,9 +91,10 @@ namespace Api.Services
             return t.Entity.Id;
         }
 
-        public async Task<List<UserModel>> GetUsers()
+        public async Task<List<UserModel>> GetUsers(string? name)
         {
-            return await _context.Users.AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            if (name == null) return await _context.Users.AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            else return await _context.Users.Where(x=>x.Name.Contains(name)).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         private async Task<DAL.Entities.User> GetUserById(Guid id)

@@ -1,6 +1,7 @@
 ﻿using Api.Models.Token;
 using Api.Models.User;
 using Api.Services;
+using Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,22 +20,38 @@ namespace Api.Controllers
             _authService = authService;
         }
 
-
-        [HttpPost]
-        public async Task<TokenModel> Token(TokenRequestModel model)
-            => await _authService.GetToken(model.Login, model.Pass);
-
-        [HttpPost]
-        public async Task<TokenModel> RefreshToken(RefreshTokenRequestModel model)
-            => await _authService.GetTokenByRefreshToken(model.RefreshToken);
-
         [HttpPost]
         public async Task CreateUser(CreateUserModel model)
         {
             if (await _userService.CheckUserExist(model.Email))
-                throw new Exception("user doesn't exist");
+                throw new NotFound("user");
             await _userService.CreateUser(model);
 
         }
+
+        [HttpPost]
+        public async Task<TokenModel> Token(TokenRequestModel model)
+        {
+            return await _authService.GetToken(model.Login, model.Pass);
+        }
+
+        [HttpPost]
+        public async Task<TokenModel> RefreshToken(RefreshTokenRequestModel model)
+        {
+            return await _authService.GetTokenByRefreshToken(model.RefreshToken);
+        }
+
+        [HttpGet]
+        public async Task<bool> CheckNameExist(string name)
+        {
+            return await _userService.CheckNameExist(name);
+        }
+
+        [HttpGet]
+        public async Task<bool> CheckMailExist(string mail)
+        {
+            return await _userService.CheckUserExist(mail);
+        }
+           
     }
 }

@@ -11,6 +11,7 @@ using DAL.Entities;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Services
 {
@@ -63,6 +64,29 @@ namespace Api.Services
         public async Task<List<ShowCommentModel>> ShowComments(Guid postId)
         {
             return await _context.Comments.Where(x => x.UserPostId == postId).AsNoTracking().ProjectTo<ShowCommentModel>(_mapper.ConfigurationProvider).ToListAsync();
+        }
+
+        public async Task DeleteComment(Guid userId, Guid commentId)
+        {
+            var comment = await _context.Comments.FirstOrDefaultAsync(x => (x.Id == commentId) && (x.UserId == userId)); //.ToListAsync();
+            if (comment==null) throw new NoAccess();
+            _context.Remove(comment);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeletePost(Guid userId, Guid postId)
+        {
+            var post = await _context.UserPosts.FirstOrDefaultAsync(x => (x.Id == postId) && (x.UserId == userId)); //.ToListAsync();
+            if (post==null) throw new NoAccess();
+            _context.Remove(post);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EditComment(Guid userId, Guid commentId, string msg)
+        {
+            var comment = await _context.Comments.Where(x => (x.Id == commentId) && (x.UserId == userId)).ToListAsync();
+            if (comment.IsNullOrEmpty()) throw new NoAccess();
+            comment[0].Message = msg;
+            await _context.SaveChangesAsync();
         }
 
         public async Task AddImageToPost(Guid userId, UserPost postId, MetadataModel model, string filepath)

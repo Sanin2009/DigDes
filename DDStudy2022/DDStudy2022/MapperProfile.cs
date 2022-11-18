@@ -17,7 +17,9 @@ namespace Api
                 .ForMember(d=>d.PasswordHash, m=>m.MapFrom(s=>HashHelper.GetHash(s.Password)))
                 .ForMember(d=>d.BirthDay, m=>m.MapFrom(s=>s.BirthDay.UtcDateTime))
                 ;
-            CreateMap<DAL.Entities.User, UserModel>();
+            CreateMap<DAL.Entities.User, UserModel>()
+                .ForMember(d=>d.TotalPosts, m=>m.MapFrom(s=>s.UserPosts!.Count))
+                .ForMember(d=>d.AvatarLink, m => m.MapFrom(s => LinkHelper.Avatar(s.Id)));
 
             CreateMap<DAL.Entities.Avatar, AttachModel>();
 

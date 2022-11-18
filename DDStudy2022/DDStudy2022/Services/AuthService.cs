@@ -95,7 +95,8 @@ namespace Api.Services
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email.ToLower() == login.ToLower());
             if (user == null)
                 throw new NotFound("User");
-
+            if (!user.IsActive)
+                throw new NoAccess();
             if (!HashHelper.Verify(pass, user.PasswordHash))
                 throw new BadRequest();
 
