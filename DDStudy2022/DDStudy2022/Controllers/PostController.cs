@@ -33,7 +33,7 @@ namespace Api.Controllers
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             if (userId!=default)
             {
-                var post = await _postService.CreatePost(userId, createPostModel.Title);
+                var post = await _postService.CreatePost(userId, createPostModel.Title, createPostModel.Tags);
                 foreach (MetadataModel model in createPostModel.Metadata)
                 {
                     var tempFi = new FileInfo(Path.Combine(Path.GetTempPath(), model.TempId.ToString()));
@@ -55,10 +55,10 @@ namespace Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task AddComment(Guid postId, string msg)
+        public async Task<Comment> AddComment(Guid postId, string msg)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            await _postService.AddComment(userId, postId, msg);
+            return await _postService.AddComment(userId, postId, msg);
         }
 
         [HttpPost]
@@ -74,6 +74,14 @@ namespace Api.Controllers
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _postService.GetAllPosts(skip, take, userId);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<List<ShowFullPostModel>> GetPostsByTag(string inputTag, int skip = 0, int take = 10)
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _postService.GetPostsByTag(skip, take, userId, inputTag);
         }
 
         [HttpGet]
@@ -94,10 +102,10 @@ namespace Api.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task EditComment(Guid commentId, string msg)
+        public async Task<Comment> EditComment(Guid commentId, string msg)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            await _postService.EditComment(userId, commentId, msg);
+            return await _postService.EditComment(userId, commentId, msg);
         }
 
         [HttpDelete]

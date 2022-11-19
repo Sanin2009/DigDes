@@ -92,8 +92,6 @@ namespace Api.Migrations
 
                     b.HasKey("UserId", "UserPostId");
 
-                    b.HasIndex("UserPostId");
-
                     b.ToTable("PostLikes");
                 });
 
@@ -157,6 +155,10 @@ namespace Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("TagString")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
@@ -190,6 +192,42 @@ namespace Api.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserSessions");
+                });
+
+            modelBuilder.Entity("PostLikeUser", b =>
+                {
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PostLikesUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PostLikesUserPostId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UsersId", "PostLikesUserId", "PostLikesUserPostId");
+
+                    b.HasIndex("PostLikesUserId", "PostLikesUserPostId");
+
+                    b.ToTable("PostLikeUser");
+                });
+
+            modelBuilder.Entity("PostLikeUserPost", b =>
+                {
+                    b.Property<Guid>("UserPostsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PostLikesUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PostLikesUserPostId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UserPostsId", "PostLikesUserId", "PostLikesUserPostId");
+
+                    b.HasIndex("PostLikesUserId", "PostLikesUserPostId");
+
+                    b.ToTable("PostLikeUserPost");
                 });
 
             modelBuilder.Entity("DAL.Entities.Avatar", b =>
@@ -240,25 +278,6 @@ namespace Api.Migrations
                     b.Navigation("UserPost");
                 });
 
-            modelBuilder.Entity("DAL.Entities.PostLike", b =>
-                {
-                    b.HasOne("DAL.Entities.User", "User")
-                        .WithMany("PostLikes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DAL.Entities.UserPost", "UserPost")
-                        .WithMany("PostLikes")
-                        .HasForeignKey("UserPostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-
-                    b.Navigation("UserPost");
-                });
-
             modelBuilder.Entity("DAL.Entities.UserPost", b =>
                 {
                     b.HasOne("DAL.Entities.User", "User")
@@ -279,6 +298,36 @@ namespace Api.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PostLikeUser", b =>
+                {
+                    b.HasOne("DAL.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.PostLike", null)
+                        .WithMany()
+                        .HasForeignKey("PostLikesUserId", "PostLikesUserPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PostLikeUserPost", b =>
+                {
+                    b.HasOne("DAL.Entities.UserPost", null)
+                        .WithMany()
+                        .HasForeignKey("UserPostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.PostLike", null)
+                        .WithMany()
+                        .HasForeignKey("PostLikesUserId", "PostLikesUserPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DAL.Entities.Avatar", b =>
@@ -329,8 +378,6 @@ namespace Api.Migrations
 
                     b.Navigation("Comments");
 
-                    b.Navigation("PostLikes");
-
                     b.Navigation("Sessions");
 
                     b.Navigation("UserPosts");
@@ -341,8 +388,6 @@ namespace Api.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("PostImages");
-
-                    b.Navigation("PostLikes");
                 });
 #pragma warning restore 612, 618
         }

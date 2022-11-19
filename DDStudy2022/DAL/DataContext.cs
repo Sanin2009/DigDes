@@ -30,8 +30,8 @@ namespace DAL
 
             modelBuilder.Entity<PostLike>()
                 .HasKey(p => new { p.UserId, p.UserPostId });
-        
-    }
+
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseNpgsql(b => b.MigrationsAssembly("Api"));

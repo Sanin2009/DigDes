@@ -30,7 +30,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public async Task<TokenModel> Token(TokenRequestModel model)
+        public async Task<TokenModel> LoginUser(TokenRequestModel model)
         {
             return await _authService.GetToken(model.Login, model.Pass);
         }

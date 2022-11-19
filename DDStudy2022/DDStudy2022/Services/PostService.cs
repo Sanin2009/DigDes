@@ -1,4 +1,5 @@
 ﻿using Api.Configs;
+using Api.Migrations;
 using Api.Models.Attach;
 using Api.Models.Comment;
 using Api.Models.Post;
@@ -10,6 +11,7 @@ using DAL;
 using DAL.Entities;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -25,7 +27,7 @@ namespace Api.Services
             _mapper = mapper;
             _context = context;
         }
-        public async Task<UserPost> CreatePost(Guid userId, string Title)
+        public async Task<UserPost> CreatePost(Guid userId, string title, string? tags)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (user == null) throw new NotFound("user");
@@ -33,10 +35,21 @@ namespace Api.Services
             {
                 UserId = userId,
                 User = user,
-                Name = Title,
+                Name = title,
                 Created = DateTime.UtcNow,
-                Id = Guid.NewGuid()
+                Id = Guid.NewGuid(),
+                TagString = tags ?? " "                
             });
+            //if (tags!=null) foreach (var tag in tags)
+            //{
+            //    tag.Trim();
+            //    var newtag = await _context.PostTags.AddAsync(new PostTag
+            //    {
+            //        UserPostId=newpost.Entity.Id,
+            //        Tag = tag, 
+            //    });
+
+            //}
             await _context.SaveChangesAsync();
             return newpost.Entity;
         }
@@ -81,12 +94,13 @@ namespace Api.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task EditComment(Guid userId, Guid commentId, string msg)
+        public async Task<Comment> EditComment(Guid userId, Guid commentId, string msg)
         {
             var comment = await _context.Comments.Where(x => (x.Id == commentId) && (x.UserId == userId)).ToListAsync();
             if (comment.IsNullOrEmpty()) throw new NoAccess();
             comment[0].Message = msg;
             await _context.SaveChangesAsync();
+            return comment[0];
         }
 
         public async Task AddImageToPost(Guid userId, UserPost postId, MetadataModel model, string filepath)
@@ -162,6 +176,18 @@ namespace Api.Services
         public async Task<List<ShowFullPostModel>> GetAllPosts(int skip, int take, Guid userId)
         {
             var temp = await _context.UserPosts.OrderByDescending(x => x.Created).Skip(skip).Take(take).ToListAsync();
+            var result = new List<ShowFullPostModel>();
+            foreach (UserPost p in temp)
+            {
+                var t = await GetPost(p.Id, userId);
+                result.Add(t);
+            }
+            return result;
+        }
+
+        public async Task<List<ShowFullPostModel>> GetPostsByTag(int skip, int take, Guid userId, string inputTag)
+        {
+            var temp = await _context.UserPosts.Where(x=>x.TagString.ToLower().Contains(inputTag.ToLower())).Skip(skip).Take(take).ToListAsync();
             var result = new List<ShowFullPostModel>();
             foreach (UserPost p in temp)
             {
