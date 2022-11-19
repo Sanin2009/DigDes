@@ -72,14 +72,24 @@ namespace Api.Controllers
         [Authorize]
         public async Task<List<ShowFullPostModel>> GetAllPosts(int skip = 0, int take = 10)
         {
-            return await _postService.GetAllPosts(skip, take);
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _postService.GetAllPosts(skip, take, userId);
         }
 
         [HttpGet]
         [Authorize]
         public async Task<ShowFullPostModel> GetPost(Guid postId)
         {
-            return await _postService.GetPost(postId);
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _postService.GetPost(postId, userId);
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<bool> UpdateLike(Guid postId)
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _postService.UpdateLike(postId, userId);
         }
 
         [HttpPut]

@@ -27,6 +27,9 @@ namespace DAL
                .IsUnique();
 
             modelBuilder.Entity<Avatar>().ToTable(nameof(Avatars));
+
+            modelBuilder.Entity<PostLike>()
+                .HasKey(p => new { p.UserId, p.UserPostId });
         
     }
 
@@ -40,5 +43,6 @@ namespace DAL
         public DbSet<UserPost> UserPosts => Set<UserPost>();
         public DbSet<Comment> Comments => Set<Comment>();
         public DbSet<PostImage> PostImages => Set<PostImage>();
+        public DbSet<PostLike> PostLikes => Set<PostLike>();
     }
 }

@@ -11,6 +11,7 @@ namespace DAL.Entities
         public virtual ICollection<PostImage>? PostImages { get; set; }
         public virtual User User { get; set; } = null!;
         public virtual ICollection<Comment>? Comments { get; set; }
+        public virtual ICollection<PostLike>? PostLikes { get; set; }
 
     }
 }

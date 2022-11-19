@@ -36,6 +36,7 @@ namespace Api.Services
                 Created = DateTime.UtcNow,
                 Id = Guid.NewGuid()
             });
+            user.LastActive = DateTimeOffset.UtcNow;
             await _context.SaveChangesAsync();
             return GenerateTokens(session.Entity);
         }
@@ -71,6 +72,8 @@ namespace Api.Services
 
 
                 session.RefreshToken = Guid.NewGuid();
+                var user = await _context.Users.FirstAsync(x => x.Id == session.UserId);
+                user.LastActive = DateTimeOffset.UtcNow;
                 await _context.SaveChangesAsync();
 
                 return GenerateTokens(session);

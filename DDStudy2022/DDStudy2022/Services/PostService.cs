@@ -77,7 +77,7 @@ namespace Api.Services
         {
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => (x.Id == postId) && (x.UserId == userId)); //.ToListAsync();
             if (post==null) throw new NoAccess();
-            _context.Remove(post);
+            _context.UserPosts.Remove(post);
             await _context.SaveChangesAsync();
         }
 
@@ -105,7 +105,7 @@ namespace Api.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ShowPostModel> GetPostInfo(Guid postId)
+        public async Task<ShowPostModel> GetPostInfo(Guid postId, Guid userId)
         {
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("post");
@@ -115,15 +115,38 @@ namespace Api.Services
             {
                 attachLinks.Add(LinkHelper.Attach(attachment.Id));
             }
-            var result = new ShowPostModel(post.Id, post.UserId, post.Created, post.Name, attachLinks);
+            var isLiked = await _context.PostLikes.AnyAsync(x => x.UserPostId == postId && x.UserId == userId);
+            int likes = _context.PostLikes.Where(x=>x.UserPostId==postId).Count();
+            var result = new ShowPostModel(post.Id, post.UserId, post.Created, post.Name, attachLinks, likes, isLiked);
             return result;
         }
 
-        public async Task<ShowFullPostModel> GetPost(Guid postId)
+        public async Task<bool> UpdateLike(Guid postId, Guid userId)
+        {
+            var isLiked = await _context.PostLikes.FirstOrDefaultAsync(x => x.UserPostId == postId && x.UserId == userId);
+            if (isLiked==null)
+            {
+                var postlike = await _context.PostLikes.AddAsync(new PostLike
+                {
+                    UserId = userId,
+                    UserPostId = postId
+                });
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else 
+            {
+                _context.PostLikes.Remove(isLiked);
+                await _context.SaveChangesAsync();
+                return false;
+            }
+        }
+
+        public async Task<ShowFullPostModel> GetPost(Guid postId, Guid userId)
         {
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("post");
-            var t1 = await GetPostInfo(postId);
+            var t1 = await GetPostInfo(postId, userId);
             var t2 = await GetUser(post.UserId);
             var t3 = await ShowComments(postId);
             return new ShowFullPostModel(t1, t2, t3);
@@ -136,13 +159,13 @@ namespace Api.Services
 
         }
 
-        public async Task<List<ShowFullPostModel>> GetAllPosts(int skip, int take)
+        public async Task<List<ShowFullPostModel>> GetAllPosts(int skip, int take, Guid userId)
         {
             var temp = await _context.UserPosts.OrderByDescending(x => x.Created).Skip(skip).Take(take).ToListAsync();
             var result = new List<ShowFullPostModel>();
-            foreach (UserPost u in temp)
+            foreach (UserPost p in temp)
             {
-                var t = await GetPost(u.Id);
+                var t = await GetPost(p.Id, userId);
                 result.Add(t);
             }
             return result;
