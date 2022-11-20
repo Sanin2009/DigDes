@@ -70,7 +70,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<List<ShowFullPostModel>> GetAllPosts(int skip = 0, int take = 10)
+        public async Task<List<ShowScrollPostModel>> GetAllPosts(int skip = 0, int take = 10)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _postService.GetAllPosts(skip, take, userId);
@@ -78,7 +78,15 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<List<ShowFullPostModel>> GetPostsByTag(string inputTag, int skip = 0, int take = 10)
+        public async Task<List<ShowScrollPostModel>> GetUsersPosts(Guid userId, int skip = 0, int take = 10)
+        {
+            var subscriberId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _postService.GetUsersPosts(skip, take, subscriberId, userId);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<List<ShowScrollPostModel>> GetPostsByTag(string inputTag, int skip = 0, int take = 10)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _postService.GetPostsByTag(skip, take, userId, inputTag);
@@ -89,7 +97,7 @@ namespace Api.Controllers
         public async Task<ShowFullPostModel> GetPost(Guid postId)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            return await _postService.GetPost(postId, userId);
+            return await _postService.GetFullPost(postId, userId);
         }
 
         [HttpPut]

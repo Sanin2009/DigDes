@@ -38,6 +38,45 @@ namespace Api.Controllers
             return await _userService.GetUser(userId);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task <List<Subscriber>> GetSubscriptions()
+        {
+            var subscriberId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.GetSubscriptions(subscriberId);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<List<Subscriber>> GetSubscribers()
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.GetSubscribers(userId);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<List<Subscriber>> GetSubRequests()
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.GetSubRequests(userId);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<int> GetUsersTotalSubs(Guid userId)
+        {
+            return await _userService.GetUsersTotalSubs(userId);
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<bool> UpdateSubRequests(Guid subscriberId, bool upd)
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.UpdateSubRequest(subscriberId, userId, upd);
+        }
+
         [HttpPut]
         [Authorize]
         public async Task<string?> UpdateStatus(string? status)
@@ -45,5 +84,24 @@ namespace Api.Controllers
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _userService.UpdateStatus(userId, status);
         }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<bool> UpdateSettings(UpdateUserSettingsModel model)
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.UpdateSettings(userId, model);
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<bool> Subscribe(Guid userId, bool sub)
+        {
+            var subscriberId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.Subscribe(subscriberId, userId, sub);
+        }
+
+
+
     }
 }

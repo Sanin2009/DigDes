@@ -31,6 +31,9 @@ namespace DAL
             modelBuilder.Entity<PostLike>()
                 .HasKey(p => new { p.UserId, p.UserPostId });
 
+            modelBuilder.Entity<Subscriber>()
+                .HasKey(p => new { p.UserId, p.SubscriberId });
+
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -44,5 +47,6 @@ namespace DAL
         public DbSet<Comment> Comments => Set<Comment>();
         public DbSet<PostImage> PostImages => Set<PostImage>();
         public DbSet<PostLike> PostLikes => Set<PostLike>();
+        public DbSet<Subscriber> Subscribers => Set<Subscriber>();
     }
 }

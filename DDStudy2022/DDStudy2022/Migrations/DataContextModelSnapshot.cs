@@ -95,6 +95,22 @@ namespace Api.Migrations
                     b.ToTable("PostLikes");
                 });
 
+            modelBuilder.Entity("DAL.Entities.Subscriber", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SubscriberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsSubscribed")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("UserId", "SubscriberId");
+
+                    b.ToTable("Subscribers");
+                });
+
             modelBuilder.Entity("DAL.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -230,6 +246,24 @@ namespace Api.Migrations
                     b.ToTable("PostLikeUserPost");
                 });
 
+            modelBuilder.Entity("SubscriberUser", b =>
+                {
+                    b.Property<Guid>("UsersId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SubscribersUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SubscribersSubscriberId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("UsersId", "SubscribersUserId", "SubscribersSubscriberId");
+
+                    b.HasIndex("SubscribersUserId", "SubscribersSubscriberId");
+
+                    b.ToTable("SubscriberUser");
+                });
+
             modelBuilder.Entity("DAL.Entities.Avatar", b =>
                 {
                     b.HasBaseType("DAL.Entities.Attach");
@@ -326,6 +360,21 @@ namespace Api.Migrations
                     b.HasOne("DAL.Entities.PostLike", null)
                         .WithMany()
                         .HasForeignKey("PostLikesUserId", "PostLikesUserPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SubscriberUser", b =>
+                {
+                    b.HasOne("DAL.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAL.Entities.Subscriber", null)
+                        .WithMany()
+                        .HasForeignKey("SubscribersUserId", "SubscribersSubscriberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

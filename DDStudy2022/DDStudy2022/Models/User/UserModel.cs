@@ -13,7 +13,6 @@ namespace Api.Models.User
         public string? Status { get; set; }
         public int TotalPosts { get; set; }
         public int TotalComments { get; set; }
-        //public int TotalSubs { get; set; } = 0; // заглушка на будущее
         
     }
 }

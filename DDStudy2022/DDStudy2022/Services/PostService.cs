@@ -40,16 +40,6 @@ namespace Api.Services
                 Id = Guid.NewGuid(),
                 TagString = tags ?? " "                
             });
-            //if (tags!=null) foreach (var tag in tags)
-            //{
-            //    tag.Trim();
-            //    var newtag = await _context.PostTags.AddAsync(new PostTag
-            //    {
-            //        UserPostId=newpost.Entity.Id,
-            //        Tag = tag, 
-            //    });
-
-            //}
             await _context.SaveChangesAsync();
             return newpost.Entity;
         }
@@ -81,14 +71,14 @@ namespace Api.Services
 
         public async Task DeleteComment(Guid userId, Guid commentId)
         {
-            var comment = await _context.Comments.FirstOrDefaultAsync(x => (x.Id == commentId) && (x.UserId == userId)); //.ToListAsync();
+            var comment = await _context.Comments.FirstOrDefaultAsync(x => (x.Id == commentId) && (x.UserId == userId)); 
             if (comment==null) throw new NoAccess();
             _context.Remove(comment);
             await _context.SaveChangesAsync();
         }
         public async Task DeletePost(Guid userId, Guid postId)
         {
-            var post = await _context.UserPosts.FirstOrDefaultAsync(x => (x.Id == postId) && (x.UserId == userId)); //.ToListAsync();
+            var post = await _context.UserPosts.FirstOrDefaultAsync(x => (x.Id == postId) && (x.UserId == userId)); 
             if (post==null) throw new NoAccess();
             _context.UserPosts.Remove(post);
             await _context.SaveChangesAsync();
@@ -131,7 +121,8 @@ namespace Api.Services
             }
             var isLiked = await _context.PostLikes.AnyAsync(x => x.UserPostId == postId && x.UserId == userId);
             int likes = _context.PostLikes.Where(x=>x.UserPostId==postId).Count();
-            var result = new ShowPostModel(post.Id, post.UserId, post.Created, post.Name, attachLinks, likes, isLiked);
+            int comments = _context.Comments.Where(x => x.UserPostId == postId).Count();
+            var result = new ShowPostModel(post.Id, post.UserId, post.Created, post.Name, attachLinks, likes, isLiked, comments);
             return result;
         }
 
@@ -155,8 +146,7 @@ namespace Api.Services
                 return false;
             }
         }
-
-        public async Task<ShowFullPostModel> GetPost(Guid postId, Guid userId)
+        public async Task<ShowFullPostModel> GetFullPost(Guid postId, Guid userId)
         {
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("post");
@@ -166,17 +156,25 @@ namespace Api.Services
             return new ShowFullPostModel(t1, t2, t3);
         }
 
-        public async Task<UserModel> GetUser(Guid id)
+        public async Task<ShowScrollPostModel> GetPost(Guid postId, Guid userId)
         {
-            var user = await GetUserById(id);
-            return _mapper.Map<UserModel>(user);
-
+            var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
+            if (post == null) throw new NotFound("post");
+            var t1 = await GetPostInfo(postId, userId);
+            var t2 = await GetUser(post.UserId);
+            var t3 = await ShowComments(postId);
+            return new ShowScrollPostModel(t1, t2);
         }
 
-        public async Task<List<ShowFullPostModel>> GetAllPosts(int skip, int take, Guid userId)
+        public async Task<UserModel> GetUser(Guid id)
+        {
+            return await GetUserById(id);
+        }
+
+        public async Task<List<ShowScrollPostModel>> GetAllPosts(int skip, int take, Guid userId)
         {
             var temp = await _context.UserPosts.OrderByDescending(x => x.Created).Skip(skip).Take(take).ToListAsync();
-            var result = new List<ShowFullPostModel>();
+            var result = new List<ShowScrollPostModel>();
             foreach (UserPost p in temp)
             {
                 var t = await GetPost(p.Id, userId);
@@ -185,10 +183,30 @@ namespace Api.Services
             return result;
         }
 
-        public async Task<List<ShowFullPostModel>> GetPostsByTag(int skip, int take, Guid userId, string inputTag)
+        public async Task<List<ShowScrollPostModel>> GetUsersPosts(int skip, int take, Guid subscriberId, Guid userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
+                throw new NotFound("user");
+            var sub = await _context.Subscribers.AnyAsync(x=>(x.SubscriberId == subscriberId) && (x.UserId == userId) && (x.IsSubscribed));
+            if ((userId==subscriberId) || (user.IsOpen) || (sub))
+            {
+                var temp = await _context.UserPosts.OrderByDescending(x => x.Created).Where(x=>x.UserId == userId).Skip(skip).Take(take).ToListAsync();
+                var result = new List<ShowScrollPostModel>();
+                foreach (UserPost p in temp)
+                {
+                    var t = await GetPost(p.Id, subscriberId);
+                    result.Add(t);
+                }
+            return result;
+            }
+            else return new List<ShowScrollPostModel>();
+        }
+
+        public async Task<List<ShowScrollPostModel>> GetPostsByTag(int skip, int take, Guid userId, string inputTag)
         {
             var temp = await _context.UserPosts.Where(x=>x.TagString.ToLower().Contains(inputTag.ToLower())).Skip(skip).Take(take).ToListAsync();
-            var result = new List<ShowFullPostModel>();
+            var result = new List<ShowScrollPostModel>();
             foreach (UserPost p in temp)
             {
                 var t = await GetPost(p.Id, userId);
@@ -204,12 +222,12 @@ namespace Api.Services
             if (attach == null) throw new NotFound("attach");
             return attach;
         }
-        private async Task<DAL.Entities.User> GetUserById(Guid id)
+        private async Task<UserModel> GetUserById(Guid id)
         {
-            var user = await _context.Users.Include(x => x.Avatar).FirstOrDefaultAsync(x => x.Id == id);
-            if (user == null)
+            var user = await _context.Users.Where(x=>x.Id==id).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            if (user.IsNullOrEmpty())
                 throw new NotFound("user");
-            return user;
+            return user[0];
         }
 
     }

@@ -51,6 +51,15 @@ namespace Api.Services
             return status;
         }
 
+        public async Task<bool> UpdateSettings(Guid userId, UpdateUserSettingsModel model)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null) throw new NotFound("user");
+            user.IsOpen = model.IsOpen ;
+            await _context.SaveChangesAsync();
+            return model.IsOpen;
+        }
+
         public async Task AddAvatarToUser(Guid userId, MetadataModel meta, string filePath)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
@@ -93,8 +102,86 @@ namespace Api.Services
 
         public async Task<List<UserModel>> GetUsers(string? name)
         {
-            if (name == null) return await _context.Users.AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
-            else return await _context.Users.Where(x=>x.Name.Contains(name)).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            if (name == null) return await _context.Users.Where(x=>x.IsActive==true).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            else return await _context.Users.Where(x=>(x.Name.Contains(name)) && (x.IsActive == true)).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+        }
+
+        public async Task<UserModel> GetUser(Guid id)
+        {
+            var user = await GetUserById(id);
+            return _mapper.Map<UserModel>(user);
+
+        }
+
+        public async Task<List<Subscriber>> GetSubscriptions(Guid subscriberId)
+        {
+            var subs = await _context.Subscribers.Where(x => (x.SubscriberId == subscriberId) && (x.IsSubscribed)).ToListAsync();
+            if (subs.IsNullOrEmpty()) return new List<Subscriber>();
+            else return subs;
+        }
+
+        public async Task<List<Subscriber>> GetSubscribers(Guid userId)
+        {
+            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed)).ToListAsync();
+            if (subs.IsNullOrEmpty()) return new List<Subscriber>();
+            else return subs;
+        }
+
+        public async Task<List<Subscriber>> GetSubRequests(Guid userId)
+        {
+            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed==false)).ToListAsync();
+            if (subs.IsNullOrEmpty()) return new List<Subscriber>();
+            else return subs;
+        }
+        public async Task<int> GetUsersTotalSubs(Guid userId)
+        {
+            return _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed == true)).Count();
+        }
+        
+
+        public async Task<bool> UpdateSubRequest(Guid subscriberId, Guid userId, bool sub)
+        {
+            var isSub = await _context.Subscribers.FirstOrDefaultAsync(x => (x.SubscriberId == subscriberId) && (x.UserId == userId));
+            if (isSub == null)
+                throw new NotFound("Request");
+            if (sub)
+            {
+                isSub.IsSubscribed = sub;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else 
+            {
+                _context.Subscribers.Remove(isSub);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+        }
+
+        public async Task<bool> Subscribe(Guid subscriberId, Guid userId, bool sub)
+        {
+            var isSub = await _context.Subscribers.FirstOrDefaultAsync(x => (x.SubscriberId == subscriberId )&& (x.UserId == userId));
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (user == null)
+                throw new NotFound("user");
+            if ((isSub == null) && (sub))
+            {
+                var postlike = await _context.Subscribers.AddAsync(new Subscriber
+                {
+                    UserId = userId,
+                    SubscriberId = subscriberId,
+                    IsSubscribed = user.IsOpen
+                });
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else if ((isSub != null) && (!sub))
+            {
+                _context.Subscribers.Remove(isSub);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            else return false;
         }
 
         private async Task<DAL.Entities.User> GetUserById(Guid id)
@@ -104,12 +191,6 @@ namespace Api.Services
                 throw new NotFound("user");
             return user;
         }
-        public async Task<UserModel> GetUser(Guid id)
-        {
-            var user = await GetUserById(id);
-            return _mapper.Map<UserModel>(user);
-
-        }       
 
         public void Dispose()
         {
