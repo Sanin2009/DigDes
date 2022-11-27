@@ -85,7 +85,7 @@ namespace Api.Services
 
         public async Task Delete(Guid id)
         {
-            var dbUser = await GetUserById(id);
+            var dbUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             if (dbUser != null)
             {
                 _context.Users.Remove(dbUser);
@@ -103,34 +103,36 @@ namespace Api.Services
         public async Task<List<UserModel>> GetUsers(string? name)
         {
             if (name == null) return await _context.Users.Where(x=>x.IsActive==true).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
-            else return await _context.Users.Where(x=>(x.Name.Contains(name)) && (x.IsActive == true)).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            else return await _context.Users.Where(x=>(x.Name.ToLower().Contains(name.ToLower())) && (x.IsActive == true)).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
-        public async Task<UserModel> GetUser(Guid id)
+        public async Task<UserModel> GetUser(Guid subId, Guid userid)
         {
-            var user = await GetUserById(id);
-            return _mapper.Map<UserModel>(user);
-
+            var user = await GetUserById(userid);
+            var sub = await _context.Subscribers.FirstOrDefaultAsync(x => (x.SubscriberId == subId) && (x.UserId == userid));
+            bool? isSub = sub?.IsSubscribed;
+            user.isSub = isSub;
+            return user;
         }
 
-        public async Task<List<Subscriber>> GetSubscriptions(Guid subscriberId)
+        public async Task<List<Guid>> GetSubscriptions(Guid subscriberId)
         {
-            var subs = await _context.Subscribers.Where(x => (x.SubscriberId == subscriberId) && (x.IsSubscribed)).ToListAsync();
-            if (subs.IsNullOrEmpty()) return new List<Subscriber>();
+            var subs = await _context.Subscribers.Where(x => (x.SubscriberId == subscriberId) && (x.IsSubscribed)).Select(x=>x.UserId).ToListAsync();
+            if (subs.IsNullOrEmpty()) return new List<Guid>();
             else return subs;
         }
 
-        public async Task<List<Subscriber>> GetSubscribers(Guid userId)
+        public async Task<List<Guid>> GetSubscribers(Guid userId)
         {
-            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed)).ToListAsync();
-            if (subs.IsNullOrEmpty()) return new List<Subscriber>();
+            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed)).Select(x => x.SubscriberId).ToListAsync();
+            if (subs.IsNullOrEmpty()) return new List<Guid>();
             else return subs;
         }
 
-        public async Task<List<Subscriber>> GetSubRequests(Guid userId)
+        public async Task<List<Guid>> GetSubRequests(Guid userId)
         {
-            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed==false)).ToListAsync();
-            if (subs.IsNullOrEmpty()) return new List<Subscriber>();
+            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed==false)).Select(x => x.SubscriberId).ToListAsync();
+            if (subs.IsNullOrEmpty()) return new List<Guid>();
             else return subs;
         }
         public async Task<int> GetUsersTotalSubs(Guid userId)
@@ -184,12 +186,12 @@ namespace Api.Services
             else return false;
         }
 
-        private async Task<DAL.Entities.User> GetUserById(Guid id)
+        private async Task<UserModel> GetUserById(Guid id)
         {
-            var user = await _context.Users.Include(x => x.Avatar).FirstOrDefaultAsync(x => x.Id == id);
-            if (user == null)
+            var user = await _context.Users.Where(x => x.Id == id).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            if (user.IsNullOrEmpty())
                 throw new NotFound("user");
-            return user;
+            return user[0];
         }
 
         public void Dispose()

@@ -109,19 +109,19 @@ namespace Api.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ShowPostModel> GetPostInfo(Guid postId, Guid userId)
+        public async Task<ShowPostModel> GetPostInfo(UserPost post, Guid userId)
         {
-            var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
+            //var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("post");
-            var attaches = await _context.PostImages.Where(x => x.UserPostId == postId).ToListAsync();
+            var attaches = await _context.PostImages.Where(x => x.UserPostId == post.Id).ToListAsync();
             var attachLinks = new List<string>();
             foreach (var attachment in attaches)
             {
                 attachLinks.Add(LinkHelper.Attach(attachment.Id));
             }
-            var isLiked = await _context.PostLikes.AnyAsync(x => x.UserPostId == postId && x.UserId == userId);
-            int likes = _context.PostLikes.Where(x=>x.UserPostId==postId).Count();
-            int comments = _context.Comments.Where(x => x.UserPostId == postId).Count();
+            var isLiked = await _context.PostLikes.AnyAsync(x => x.UserPostId == post.Id && x.UserId == userId);
+            int likes = _context.PostLikes.Where(x => x.UserPostId == post.Id).Count();
+            int comments = _context.Comments.Where(x => x.UserPostId == post.Id).Count();
             var result = new ShowPostModel(post.Id, post.UserId, post.Created, post.Name, attachLinks, likes, isLiked, comments);
             return result;
         }
@@ -150,7 +150,7 @@ namespace Api.Services
         {
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("post");
-            var t1 = await GetPostInfo(postId, userId);
+            var t1 = await GetPostInfo(post, userId);
             var t2 = await GetUser(post.UserId);
             var t3 = await ShowComments(postId);
             return new ShowFullPostModel(t1, t2, t3);
@@ -160,7 +160,7 @@ namespace Api.Services
         {
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("post");
-            var t1 = await GetPostInfo(postId, userId);
+            var t1 = await GetPostInfo(post, userId);
             var t2 = await GetUser(post.UserId);
             var t3 = await ShowComments(postId);
             return new ShowScrollPostModel(t1, t2);
@@ -170,6 +170,23 @@ namespace Api.Services
         {
             return await GetUserById(id);
         }
+
+        public async Task<List<ShowScrollPostModel>> GetFeed(Guid userId, int skip=0, int take=10)
+        {
+            //var temp = await _context.UserPosts.Include(x => x.User).ThenInclude(x => x.Subscribers).Where(x=>x.) AsNoTracking().ToListAsync();
+            var temp = await _context.Subscribers.Where(x => (x.SubscriberId == userId) && (x.IsSubscribed == true)).SelectMany(x => x.Users).Include(u => u.UserPosts).Select(x=>x.UserPosts).AsNoTracking().ToListAsync();
+            //var res = temp.Select(x => x.Users.Select(u=>u.UserPosts)).ToList();
+            //var tempres = temp.Select(x => x.UserPost);
+            //var temp = await _context.UserPosts.OrderByDescending(x => x.Created).Skip(skip).Take(take).ToListAsync();
+            var result = new List<ShowScrollPostModel>();
+            foreach (UserPost p in temp)
+            {
+                var t = await GetPost(p.Id, userId);
+                result.Add(t);
+            }
+            return result;
+        }
+
 
         public async Task<List<ShowScrollPostModel>> GetAllPosts(int skip, int take, Guid userId)
         {

@@ -32,15 +32,15 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<UserModel> GetCurrentUser()
+        public async Task<UserModel> GetUserById(Guid userId)
         {
-            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            return await _userService.GetUser(userId);
+            var subId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.GetUser(subId, userId);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task <List<Subscriber>> GetSubscriptions()
+        public async Task <List<Guid>> GetSubscriptions()
         {
             var subscriberId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _userService.GetSubscriptions(subscriberId);
@@ -48,7 +48,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<List<Subscriber>> GetSubscribers()
+        public async Task<List<Guid>> GetSubscribers()
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _userService.GetSubscribers(userId);
@@ -56,7 +56,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<List<Subscriber>> GetSubRequests()
+        public async Task<List<Guid>> GetSubRequests()
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _userService.GetSubRequests(userId);

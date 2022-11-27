@@ -100,6 +100,14 @@ namespace Api.Controllers
             return await _postService.GetFullPost(postId, userId);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<List<ShowScrollPostModel>> GetFeed()
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _postService.GetFeed(userId);
+        }
+
         [HttpPut]
         [Authorize]
         public async Task<bool> UpdateLike(Guid postId)

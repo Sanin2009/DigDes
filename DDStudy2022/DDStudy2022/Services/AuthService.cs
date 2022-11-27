@@ -147,7 +147,7 @@ namespace Api.Services
                 );
             var encodedRefresh = new JwtSecurityTokenHandler().WriteToken(refresh);
 
-            return new TokenModel(encodedJwt, encodedRefresh);
+            return new TokenModel(encodedJwt, encodedRefresh, session.User.Id);
         }
 
     }

@@ -13,6 +13,7 @@ namespace Api.Models.User
         public string? Status { get; set; }
         public int TotalPosts { get; set; }
         public int TotalComments { get; set; }
+        public bool? isSub { get; set; } = null;
         
     }
 }
