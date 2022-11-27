@@ -31,9 +31,6 @@ namespace DAL
             modelBuilder.Entity<PostLike>()
                 .HasKey(p => new { p.UserId, p.UserPostId });
 
-            modelBuilder.Entity<Subscriber>()
-                .HasKey(p => new { p.UserId, p.SubscriberId });
-
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -162,7 +162,6 @@ namespace Api.Services
             if (post == null) throw new NotFound("post");
             var t1 = await GetPostInfo(post, userId);
             var t2 = await GetUser(post.UserId);
-            var t3 = await ShowComments(postId);
             return new ShowScrollPostModel(t1, t2);
         }
 
@@ -173,11 +172,7 @@ namespace Api.Services
 
         public async Task<List<ShowScrollPostModel>> GetFeed(Guid userId, int skip=0, int take=10)
         {
-            //var temp = await _context.UserPosts.Include(x => x.User).ThenInclude(x => x.Subscribers).Where(x=>x.) AsNoTracking().ToListAsync();
-            var temp = await _context.Subscribers.Where(x => (x.SubscriberId == userId) && (x.IsSubscribed == true)).SelectMany(x => x.Users).Include(u => u.UserPosts).Select(x=>x.UserPosts).AsNoTracking().ToListAsync();
-            //var res = temp.Select(x => x.Users.Select(u=>u.UserPosts)).ToList();
-            //var tempres = temp.Select(x => x.UserPost);
-            //var temp = await _context.UserPosts.OrderByDescending(x => x.Created).Skip(skip).Take(take).ToListAsync();
+            var temp = await _context.Subscribers.Where(x => (x.SubscriberId == userId) && (x.IsSubscribed == true)).Include(x => x.Users).ThenInclude(u=>u.UserPosts).SelectMany(p=>p.Users.UserPosts).AsNoTracking().ToListAsync();
             var result = new List<ShowScrollPostModel>();
             foreach (UserPost p in temp)
             {
