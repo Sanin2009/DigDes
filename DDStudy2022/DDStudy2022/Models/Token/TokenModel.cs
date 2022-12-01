@@ -4,12 +4,10 @@
     {
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
-        public Guid UserId { get; set; }
-        public TokenModel(string accessToken, string refreshToken, Guid userId)
+        public TokenModel(string accessToken, string refreshToken)
         {
             AccessToken = accessToken;
             RefreshToken = refreshToken;
-            UserId = userId;
         }
     }
 }

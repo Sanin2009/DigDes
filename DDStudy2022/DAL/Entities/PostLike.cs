@@ -10,7 +10,7 @@ namespace DAL.Entities
     {
         public Guid UserPostId { get; set; }
         public Guid UserId  { get; set; }
-        public virtual ICollection<User> Users { get; set; } = null!;
-        public virtual ICollection<UserPost> UserPosts { get; set; } = null!;
+        public virtual User Users { get; set; } = null!;
+        public virtual UserPost UserPosts { get; set; } = null!;
     }
 }

@@ -104,14 +104,14 @@ namespace Api.Services
                 MimeType = model.MimeType,
                 FilePath = filepath,
                 Name = model.Name,
-                Size = model.Size
+                Size = model.Size,
+                Created = DateTimeOffset.Now,
             });
             await _context.SaveChangesAsync();
         }
 
         public async Task<ShowPostModel> GetPostInfo(UserPost post, Guid userId)
         {
-            //var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("post");
             var attaches = await _context.PostImages.Where(x => x.UserPostId == post.Id).ToListAsync();
             var attachLinks = new List<string>();
@@ -172,7 +172,10 @@ namespace Api.Services
 
         public async Task<List<ShowScrollPostModel>> GetFeed(Guid userId, int skip=0, int take=10)
         {
-            var temp = await _context.Subscribers.Where(x => (x.SubscriberId == userId) && (x.IsSubscribed == true)).Include(x => x.Users).ThenInclude(u=>u.UserPosts).SelectMany(p=>p.Users.UserPosts).AsNoTracking().ToListAsync();
+            var temp = await _context.Subscribers.Where(x => (x.SubscriberId == userId) && (x.IsSubscribed == true))
+                .Include(x => x.Users).ThenInclude(u=>u.UserPosts)
+                .SelectMany(p=>p.Users.UserPosts).OrderByDescending(x=>x.Created)
+                .Skip(skip).Take(take).AsNoTracking().ToListAsync();
             var result = new List<ShowScrollPostModel>();
             foreach (UserPost p in temp)
             {

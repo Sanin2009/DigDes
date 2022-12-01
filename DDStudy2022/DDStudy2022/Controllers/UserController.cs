@@ -40,6 +40,14 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
+        public async Task<UserModel> GetCurrentUser()
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _userService.GetUser(userId, userId);
+        }
+
+        [HttpGet]
+        [Authorize]
         public async Task <List<Guid>> GetSubscriptions()
         {
             var subscriberId = User.GetClaimValue<Guid>(ClaimNames.Id);

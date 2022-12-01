@@ -46,7 +46,6 @@ internal class Program
                         {
                             Type = ReferenceType.SecurityScheme,
                             Id = JwtBearerDefaults.AuthenticationScheme,
-
                         },
                         Scheme = "oauth2",
                         Name = JwtBearerDefaults.AuthenticationScheme,

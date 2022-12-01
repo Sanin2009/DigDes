@@ -71,7 +71,8 @@ namespace Api.Services
                     MimeType = meta.MimeType, 
                     FilePath = filePath, 
                     Name = meta.Name, 
-                    Size = meta.Size 
+                    Size = meta.Size,
+                    Created = DateTimeOffset.Now,
                 });
                 await _context.SaveChangesAsync();
             }
@@ -80,7 +81,7 @@ namespace Api.Services
 
         public async Task<List<AttachModel>> GetAllUserAvatars(Guid userId)
         {
-            return await _context.Avatars.Where(x=>x.UserId ==userId).AsNoTracking().ProjectTo<AttachModel>(_mapper.ConfigurationProvider).ToListAsync(); 
+            return await _context.Avatars.Where(x=>x.UserId ==userId).OrderByDescending(x=>x.Created).AsNoTracking().ProjectTo<AttachModel>(_mapper.ConfigurationProvider).ToListAsync(); 
         }
 
         public async Task Delete(Guid id)

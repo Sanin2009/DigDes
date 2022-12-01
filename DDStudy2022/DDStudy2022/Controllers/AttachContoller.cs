@@ -73,7 +73,6 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<FileResult> GetUserAvatar(Guid userId)
         {
             // Free access
