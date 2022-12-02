@@ -1,0 +1,12 @@
+F:\ProjectDD\2022\DDStudy2022\Common\bin\Release\net6.0\Common.deps.json
+F:\ProjectDD\2022\DDStudy2022\Common\bin\Release\net6.0\Common.dll
+F:\ProjectDD\2022\DDStudy2022\Common\bin\Release\net6.0\Common.pdb
+F:\ProjectDD\2022\DDStudy2022\Common\obj\Release\net6.0\Common.csproj.AssemblyReference.cache
+F:\ProjectDD\2022\DDStudy2022\Common\obj\Release\net6.0\Common.GeneratedMSBuildEditorConfig.editorconfig
+F:\ProjectDD\2022\DDStudy2022\Common\obj\Release\net6.0\Common.AssemblyInfoInputs.cache
+F:\ProjectDD\2022\DDStudy2022\Common\obj\Release\net6.0\Common.AssemblyInfo.cs
+F:\ProjectDD\2022\DDStudy2022\Common\obj\Release\net6.0\Common.csproj.CoreCompileInputs.cache
+F:\ProjectDD\2022\DDStudy2022\Common\obj\Release\net6.0\Common.dll
+F:\ProjectDD\2022\DDStudy2022\Common\obj\Release\net6.0\refint\Common.dll
+F:\ProjectDD\2022\DDStudy2022\Common\obj\Release\net6.0\Common.pdb
+F:\ProjectDD\2022\DDStudy2022\Common\obj\Release\net6.0\ref\Common.dll

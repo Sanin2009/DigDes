@@ -1,0 +1,12 @@
+F:\ProjectDD\2022\DDStudy2022\DAL\bin\Release\net6.0\DAL.deps.json
+F:\ProjectDD\2022\DDStudy2022\DAL\bin\Release\net6.0\DAL.dll
+F:\ProjectDD\2022\DDStudy2022\DAL\bin\Release\net6.0\DAL.pdb
+F:\ProjectDD\2022\DDStudy2022\DAL\obj\Release\net6.0\DAL.csproj.AssemblyReference.cache
+F:\ProjectDD\2022\DDStudy2022\DAL\obj\Release\net6.0\DAL.GeneratedMSBuildEditorConfig.editorconfig
+F:\ProjectDD\2022\DDStudy2022\DAL\obj\Release\net6.0\DAL.AssemblyInfoInputs.cache
+F:\ProjectDD\2022\DDStudy2022\DAL\obj\Release\net6.0\DAL.AssemblyInfo.cs
+F:\ProjectDD\2022\DDStudy2022\DAL\obj\Release\net6.0\DAL.csproj.CoreCompileInputs.cache
+F:\ProjectDD\2022\DDStudy2022\DAL\obj\Release\net6.0\DAL.dll
+F:\ProjectDD\2022\DDStudy2022\DAL\obj\Release\net6.0\refint\DAL.dll
+F:\ProjectDD\2022\DDStudy2022\DAL\obj\Release\net6.0\DAL.pdb
+F:\ProjectDD\2022\DDStudy2022\DAL\obj\Release\net6.0\ref\DAL.dll
