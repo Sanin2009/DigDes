@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) =>
           AppNavigator.onGeneratedRoutes(settings, context),
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
       home: LoaderWidget.create(),
     );

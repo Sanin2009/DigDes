@@ -21,7 +21,7 @@ class BottomAppBarMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomAppBar(
         shape: shape,
-        color: Colors.blue,
+        color: Colors.green,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
