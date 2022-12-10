@@ -31,11 +31,25 @@ class BottomAppBarMenu extends StatelessWidget {
                 AppNavigator.toApp();
               },
             ),
-            if (centerVariants.contains(fabLocation)) const Spacer(),
+            const Spacer(),
             IconButton(
               icon: const Icon(Icons.list),
               onPressed: () {
                 AppNavigator.toHome();
+              },
+            ),
+            const Spacer(),
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                //AppNavigator.toUserSearch();
+              },
+            ),
+            const Spacer(),
+            IconButton(
+              icon: const Icon(Icons.file_copy),
+              onPressed: () {
+                //AppNavigator.toPostSearch();
               },
             )
           ],

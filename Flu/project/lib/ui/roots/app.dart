@@ -79,9 +79,9 @@ class App extends StatelessWidget {
                         headers: viewModel.headers)),
                 Text("Name: ${u.name}"),
                 Text(
-                    "Birthday: ${DateTime.parse(u.birthDay).day}.${DateTime.parse(u.birthDay).month}.${DateTime.parse(u.birthDay).year}"),
+                    "Birthday: ${DateTime.parse(u.birthDay).day} of ${DateTime.parse(u.birthDay).month} ${DateTime.parse(u.birthDay).year}"),
                 Text(
-                    "Last online: ${DateTime.parse(u.lastActive).day}.${DateTime.parse(u.lastActive).month} at ${DateTime.parse(u.lastActive).hour}:${DateTime.parse(u.lastActive).minute}"),
+                    "Last online: ${DateTime.now().day}.${DateTime.now().month} at ${DateTime.now().hour}:${(DateTime.now().minute > 9) ? DateTime.now().minute : "0${DateTime.now().minute}"}"),
                 Text("Login: ${u.email}"),
                 Text("Status: ${u.status ?? "no status"}"),
                 Text("Total Posts: ${u.totalPosts}"),
