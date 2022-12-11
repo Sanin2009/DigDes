@@ -35,15 +35,6 @@ class AuthService {
     }
   }
 
-  Future<bool> tryGetUser() async {
-    try {
-      await _api.getUser();
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
   Future<bool> checkAuth() async {
     return ((await TokenStorage.getAccessToken()) != null &&
         (await SharedPrefs.getStoredUser()) != null);

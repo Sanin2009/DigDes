@@ -14,19 +14,20 @@ class User {
   final int totalPosts;
   final int totalComments;
   bool? isSub;
+  bool isOpen;
 
-  User({
-    required this.id,
-    required this.name,
-    required this.email,
-    required this.birthDay,
-    required this.lastActive,
-    required this.avatarLink,
-    this.status,
-    required this.totalPosts,
-    required this.totalComments,
-    this.isSub,
-  });
+  User(
+      {required this.id,
+      required this.name,
+      required this.email,
+      required this.birthDay,
+      required this.lastActive,
+      required this.avatarLink,
+      this.status,
+      required this.totalPosts,
+      required this.totalComments,
+      this.isSub,
+      required this.isOpen});
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
 import '../../domain/models/user.dart';
+import '../../helper.dart';
 import '../../internal/config/app_config.dart';
 import '../../internal/config/shared_prefs.dart';
 import '../../internal/config/token_storage.dart';
@@ -37,10 +38,6 @@ class _ViewModel extends ChangeNotifier {
   void _logout() async {
     await _authService.logout().then((value) => AppNavigator.toLoader());
   }
-
-  void _refresh() async {
-    await _authService.tryGetUser();
-  }
 }
 
 class App extends StatelessWidget {
@@ -65,8 +62,6 @@ class App extends StatelessWidget {
             onPressed: () {},
           ),
           IconButton(
-              icon: const Icon(Icons.refresh), onPressed: viewModel._refresh),
-          IconButton(
               icon: const Icon(Icons.exit_to_app),
               onPressed: viewModel._logout),
         ],
@@ -77,25 +72,33 @@ class App extends StatelessWidget {
                 Image(
                     image: NetworkImage("$baseUrl${u.avatarLink}",
                         headers: viewModel.headers)),
+                Text("Account: ${u.isOpen ? "Open" : "Private"}"),
                 Text("Name: ${u.name}"),
                 Text(
-                    "Birthday: ${DateTime.parse(u.birthDay).day} of ${DateTime.parse(u.birthDay).month} ${DateTime.parse(u.birthDay).year}"),
+                    "Birthday: ${DateTime.parse(u.birthDay).day} of ${Helper.GetMonth(DateTime.parse(u.birthDay).month.toString())} ${DateTime.parse(u.birthDay).year}"),
                 Text(
-                    "Last online: ${DateTime.now().day}.${DateTime.now().month} at ${DateTime.now().hour}:${(DateTime.now().minute > 9) ? DateTime.now().minute : "0${DateTime.now().minute}"}"),
+                    "Last online: ${DateTime.now().day} of ${Helper.GetMonth(DateTime.now().month.toString())} at ${DateTime.now().hour}:${(DateTime.now().minute > 9) ? DateTime.now().minute : "0${DateTime.now().minute}"}"),
                 Text("Login: ${u.email}"),
                 Text("Status: ${u.status ?? "no status"}"),
                 Text("Total Posts: ${u.totalPosts}"),
                 Text("Total Comments: ${u.totalComments}"),
-                TextButton(
-                    onPressed: () {},
-                    child: const Card(
-                        child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Update status",
-                        textAlign: TextAlign.center,
-                      ),
-                    ))),
+                Row(
+                  children: [
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {},
+                        child: const Card(
+                            child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Update status",
+                            textAlign: TextAlign.center,
+                          ),
+                        ))),
+                    const Spacer()
+                  ],
+                ),
+                Row(),
                 TextButton(
                     onPressed: () {},
                     child: const Card(

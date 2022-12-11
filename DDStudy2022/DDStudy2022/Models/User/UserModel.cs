@@ -9,6 +9,7 @@ namespace Api.Models.User
         public string Email { get; set; } = null!;
         public DateTimeOffset BirthDay { get; set; }
         public DateTimeOffset LastActive { get; set; }
+        public bool IsOpen { get; set; }
         public string? AvatarLink { get; set; }
         public string? Status { get; set; }
         public int TotalPosts { get; set; }
