@@ -34,23 +34,23 @@ class _ViewModel extends ChangeNotifier {
   }
 }
 
-class Home extends StatefulWidget {
-  const Home({Key? key, required this.title}) : super(key: key);
+class Feed extends StatefulWidget {
+  const Feed({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   static create() {
     return ChangeNotifierProvider(
       create: (BuildContext context) => _ViewModel(context: context),
-      child: const Home(title: "Feed"),
+      child: const Feed(title: "Feed"),
     );
   }
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Feed> createState() => _FeedState();
 }
 
-class _HomeState extends State<Home> {
+class _FeedState extends State<Feed> {
   int _counter = 0;
   final _authService = AuthService();
 

@@ -40,8 +40,8 @@ class _ViewModel extends ChangeNotifier {
   }
 }
 
-class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+class Profile extends StatelessWidget {
+  const Profile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +57,10 @@ class App extends StatelessWidget {
             : null,
         title: Text(u == null ? "Hello!" : "Hello, ${u.name}"),
         actions: [
+          const IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: AppNavigator.toBack,
+          ),
           const IconButton(
             icon: Icon(Icons.settings),
             onPressed: AppNavigator.toSettings,
@@ -132,7 +136,7 @@ class App extends StatelessWidget {
   static create() {
     return ChangeNotifierProvider(
       create: (BuildContext context) => _ViewModel(context: context),
-      child: const App(),
+      child: const Profile(),
     );
   }
 }

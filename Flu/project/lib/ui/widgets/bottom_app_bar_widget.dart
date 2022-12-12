@@ -28,14 +28,14 @@ class BottomAppBarMenu extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.person),
               onPressed: () {
-                AppNavigator.toApp();
+                AppNavigator.toProfile();
               },
             ),
             const Spacer(),
             IconButton(
               icon: const Icon(Icons.list),
               onPressed: () {
-                AppNavigator.toHome();
+                AppNavigator.toFeed();
               },
             ),
             const Spacer(),

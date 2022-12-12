@@ -3,16 +3,16 @@ import 'package:project/ui/roots/searchpost.dart';
 import 'package:project/ui/roots/searchusers.dart';
 import 'package:project/ui/roots/settings.dart';
 
-import 'roots/app.dart';
+import 'roots/profile.dart';
 import 'roots/auth.dart';
-import 'roots/home.dart';
+import 'roots/feed.dart';
 import 'roots/loader.dart';
 
 class NavigationRoutes {
   static const loaderWidget = "/";
   static const auth = "/auth";
-  static const app = "/app";
-  static const home = "/home";
+  static const profile = "/profile";
+  static const feed = "/feed";
   static const settings = "/settings";
   static const searchuser = "/searchuser";
   static const searchpost = "/searchpost";
@@ -31,14 +31,15 @@ class AppNavigator {
         ?.pushNamedAndRemoveUntil(NavigationRoutes.auth, ((route) => false));
   }
 
-  static void toApp() {
+  static void toProfile() {
     key.currentState
-        ?.pushNamedAndRemoveUntil(NavigationRoutes.app, ((route) => false));
+        ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
+    key.currentState?.pushNamed(NavigationRoutes.profile);
   }
 
-  static void toHome() {
+  static void toFeed() {
     key.currentState
-        ?.pushNamedAndRemoveUntil(NavigationRoutes.home, ((route) => false));
+        ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
   }
 
   static void toSettings() {
@@ -46,13 +47,15 @@ class AppNavigator {
   }
 
   static void toSearchUser() {
-    key.currentState?.pushNamedAndRemoveUntil(
-        NavigationRoutes.searchuser, ((route) => false));
+    key.currentState
+        ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
+    key.currentState?.pushNamed(NavigationRoutes.searchuser);
   }
 
   static void toSearchPost() {
-    key.currentState?.pushNamedAndRemoveUntil(
-        NavigationRoutes.searchpost, ((route) => false));
+    key.currentState
+        ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
+    key.currentState?.pushNamed(NavigationRoutes.searchpost);
   }
 
   static void toBack() {
@@ -66,10 +69,11 @@ class AppNavigator {
             pageBuilder: ((_, __, ___) => LoaderWidget.create()));
       case NavigationRoutes.auth:
         return PageRouteBuilder(pageBuilder: ((_, __, ___) => Auth.create()));
-      case NavigationRoutes.app:
-        return PageRouteBuilder(pageBuilder: ((_, __, ___) => App.create()));
-      case NavigationRoutes.home:
-        return PageRouteBuilder(pageBuilder: ((_, __, ___) => Home.create()));
+      case NavigationRoutes.profile:
+        return PageRouteBuilder(
+            pageBuilder: ((_, __, ___) => Profile.create()));
+      case NavigationRoutes.feed:
+        return PageRouteBuilder(pageBuilder: ((_, __, ___) => Feed.create()));
       case NavigationRoutes.settings:
         return PageRouteBuilder(
             pageBuilder: ((_, __, ___) => Settings.create()));
