@@ -42,14 +42,14 @@ class BottomAppBarMenu extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.search),
               onPressed: () {
-                //AppNavigator.toUserSearch();
+                AppNavigator.toSearchUser();
               },
             ),
             const Spacer(),
             IconButton(
               icon: const Icon(Icons.file_copy),
               onPressed: () {
-                //AppNavigator.toPostSearch();
+                AppNavigator.toSearchPost();
               },
             )
           ],

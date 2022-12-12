@@ -57,9 +57,9 @@ class App extends StatelessWidget {
             : null,
         title: Text(u == null ? "Hello!" : "Hello, ${u.name}"),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {},
+          const IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: AppNavigator.toSettings,
           ),
           IconButton(
               icon: const Icon(Icons.exit_to_app),

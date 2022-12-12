@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/roots/searchpost.dart';
+import 'package:project/ui/roots/searchusers.dart';
+import 'package:project/ui/roots/settings.dart';
 
 import 'roots/app.dart';
 import 'roots/auth.dart';
@@ -10,6 +13,9 @@ class NavigationRoutes {
   static const auth = "/auth";
   static const app = "/app";
   static const home = "/home";
+  static const settings = "/settings";
+  static const searchuser = "/searchuser";
+  static const searchpost = "/searchpost";
 }
 
 class AppNavigator {
@@ -35,6 +41,24 @@ class AppNavigator {
         ?.pushNamedAndRemoveUntil(NavigationRoutes.home, ((route) => false));
   }
 
+  static void toSettings() {
+    key.currentState?.pushNamed(NavigationRoutes.settings);
+  }
+
+  static void toSearchUser() {
+    key.currentState?.pushNamedAndRemoveUntil(
+        NavigationRoutes.searchuser, ((route) => false));
+  }
+
+  static void toSearchPost() {
+    key.currentState?.pushNamedAndRemoveUntil(
+        NavigationRoutes.searchpost, ((route) => false));
+  }
+
+  static void toBack() {
+    key.currentState?.pop();
+  }
+
   static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context) {
     switch (settings.name) {
       case NavigationRoutes.loaderWidget:
@@ -46,6 +70,15 @@ class AppNavigator {
         return PageRouteBuilder(pageBuilder: ((_, __, ___) => App.create()));
       case NavigationRoutes.home:
         return PageRouteBuilder(pageBuilder: ((_, __, ___) => Home.create()));
+      case NavigationRoutes.settings:
+        return PageRouteBuilder(
+            pageBuilder: ((_, __, ___) => Settings.create()));
+      case NavigationRoutes.searchuser:
+        return PageRouteBuilder(
+            pageBuilder: ((_, __, ___) => SearchUser.create()));
+      case NavigationRoutes.searchpost:
+        return PageRouteBuilder(
+            pageBuilder: ((_, __, ___) => SearchPost.create()));
     }
     return null;
   }
