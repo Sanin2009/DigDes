@@ -70,12 +70,12 @@ namespace Api.Controllers
             return await _userService.GetSubRequests(userId);
         }
 
-        [HttpGet]
-        [Authorize]
-        public async Task<int> GetUsersTotalSubs(Guid userId)
-        {
-            return await _userService.GetUsersTotalSubs(userId);
-        }
+        //[HttpGet]
+        //[Authorize]
+        //public async Task<int> GetUsersTotalSubs(Guid userId)
+        //{
+        //    return await _userService.GetUsersTotalSubs(userId);
+        //}
 
         [HttpPut]
         [Authorize]

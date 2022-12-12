@@ -72,6 +72,18 @@ class App extends StatelessWidget {
                 Image(
                     image: NetworkImage("$baseUrl${u.avatarLink}",
                         headers: viewModel.headers)),
+                Row(
+                  children: [
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {},
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text("Subscribers: ${u.totalSubs}"),
+                        )),
+                    const Spacer()
+                  ],
+                ),
                 Text("Account: ${u.isOpen ? "Open" : "Private"}"),
                 Text("Name: ${u.name}"),
                 Text(

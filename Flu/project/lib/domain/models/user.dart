@@ -13,6 +13,7 @@ class User {
   String? status;
   final int totalPosts;
   final int totalComments;
+  final int totalSubs;
   bool? isSub;
   bool isOpen;
 
@@ -26,6 +27,7 @@ class User {
       this.status,
       required this.totalPosts,
       required this.totalComments,
+      required this.totalSubs,
       this.isSub,
       required this.isOpen});
 

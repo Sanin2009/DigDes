@@ -20,7 +20,8 @@ namespace Api
             CreateMap<DAL.Entities.User, UserModel>()
                 .ForMember(d=>d.TotalPosts, m=>m.MapFrom(s=>s.UserPosts!.Count))
                 .ForMember(d=>d.AvatarLink, m => m.MapFrom(s => LinkHelper.Avatar(s.Id)))
-                .ForMember(d => d.TotalComments, m => m.MapFrom(s => s.Comments!.Count));
+                .ForMember(d => d.TotalComments, m => m.MapFrom(s => s.Comments!.Count))
+                .ForMember(d => d.TotalSubs, m => m.MapFrom(s => s.Subscribers!.Count));
 
             CreateMap<DAL.Entities.Avatar, AttachModel>();
 

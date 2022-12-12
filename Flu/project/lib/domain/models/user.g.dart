@@ -16,6 +16,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       status: json['status'] as String?,
       totalPosts: json['totalPosts'] as int,
       totalComments: json['totalComments'] as int,
+      totalSubs: json['totalSubs'] as int,
       isSub: json['isSub'] as bool?,
       isOpen: json['isOpen'] as bool,
     );
@@ -30,6 +31,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'status': instance.status,
       'totalPosts': instance.totalPosts,
       'totalComments': instance.totalComments,
+      'totalSubs': instance.totalSubs,
       'isSub': instance.isSub,
       'isOpen': instance.isOpen,
     };
