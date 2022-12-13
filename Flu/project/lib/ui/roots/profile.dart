@@ -81,6 +81,21 @@ class Profile extends StatelessWidget {
                     const Spacer(),
                     TextButton(
                         onPressed: () {},
+                        child: const Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "My subscripitions",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        )),
+                    const Spacer()
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Spacer(),
+                    TextButton(
+                        onPressed: () {},
                         child: Align(
                           alignment: Alignment.center,
                           child: Text("Subscribers: ${u.totalSubs}"),
