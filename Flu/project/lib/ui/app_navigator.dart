@@ -11,11 +11,11 @@ import 'roots/loader.dart';
 class NavigationRoutes {
   static const loaderWidget = "/";
   static const auth = "/auth";
-  static const profile = "/profile";
+  static const profile = "/feed/profile";
   static const feed = "/feed";
   static const settings = "/settings";
-  static const searchuser = "/searchuser";
-  static const searchpost = "/searchpost";
+  static const searchuser = "/feed/searchuser";
+  static const searchpost = "/feed/searchpost";
 }
 
 class AppNavigator {
@@ -32,8 +32,8 @@ class AppNavigator {
   }
 
   static void toProfile() {
-    key.currentState
-        ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
+    //key.currentState
+    //   ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
     key.currentState?.pushNamed(NavigationRoutes.profile);
   }
 
@@ -47,14 +47,14 @@ class AppNavigator {
   }
 
   static void toSearchUser() {
-    key.currentState
-        ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
+    //key.currentState
+    //    ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
     key.currentState?.pushNamed(NavigationRoutes.searchuser);
   }
 
   static void toSearchPost() {
-    key.currentState
-        ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
+    // key.currentState
+    //     ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
     key.currentState?.pushNamed(NavigationRoutes.searchpost);
   }
 

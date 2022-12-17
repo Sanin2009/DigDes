@@ -58,20 +58,32 @@ Map<String, dynamic> _$FullPostToJson(FullPost instance) => <String, dynamic>{
       'showCommentModels': instance.showCommentModels,
     };
 
-ShowCommentModel _$ShowCommentModelFromJson(Map<String, dynamic> json) =>
-    ShowCommentModel(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      message: json['message'] as String,
-      created: json['created'] as String,
-      avatarLink: json['avatarLink'] as String,
+CreatePostModel _$CreatePostModelFromJson(Map<String, dynamic> json) =>
+    CreatePostModel(
+      title: json['title'] as String?,
+      tags: json['tags'] as String,
+      metadata: (json['metadata'] as List<dynamic>)
+          .map((e) => Metadatum.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
-Map<String, dynamic> _$ShowCommentModelToJson(ShowCommentModel instance) =>
+Map<String, dynamic> _$CreatePostModelToJson(CreatePostModel instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'title': instance.title,
+      'tags': instance.tags,
+      'metadata': instance.metadata,
+    };
+
+Metadatum _$MetadatumFromJson(Map<String, dynamic> json) => Metadatum(
+      tempId: json['tempId'] as String,
+      name: json['name'] as String,
+      mimeType: json['mimeType'] as String,
+      size: json['size'] as int,
+    );
+
+Map<String, dynamic> _$MetadatumToJson(Metadatum instance) => <String, dynamic>{
+      'tempId': instance.tempId,
       'name': instance.name,
-      'message': instance.message,
-      'created': instance.created,
-      'avatarLink': instance.avatarLink,
+      'mimeType': instance.mimeType,
+      'size': instance.size,
     };
