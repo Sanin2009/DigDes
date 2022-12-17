@@ -22,7 +22,7 @@ ShowPostModel _$ShowPostModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       userId: json['userId'] as String,
       created: json['created'] as String,
-      name: json['name'] as String?,
+      name: json['name'] as String,
       attaches: (json['attaches'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
@@ -60,7 +60,7 @@ Map<String, dynamic> _$FullPostToJson(FullPost instance) => <String, dynamic>{
 
 CreatePostModel _$CreatePostModelFromJson(Map<String, dynamic> json) =>
     CreatePostModel(
-      title: json['title'] as String?,
+      title: json['title'] as String,
       tags: json['tags'] as String,
       metadata: (json['metadata'] as List<dynamic>)
           .map((e) => Metadatum.fromJson(e as Map<String, dynamic>))

@@ -30,7 +30,7 @@ class ShowPostModel {
   final String id;
   final String userId;
   final String created;
-  String? name;
+  final String name;
   List<String>? attaches;
   final int totalLikes;
   final bool likedByMe;
@@ -40,7 +40,7 @@ class ShowPostModel {
     required this.id,
     required this.userId,
     required this.created,
-    this.name,
+    required this.name,
     this.attaches,
     required this.totalLikes,
     required this.likedByMe,
@@ -75,12 +75,12 @@ class FullPost {
 
 @JsonSerializable()
 class CreatePostModel {
-  String? title;
+  final String title;
   final String tags;
   final List<Metadatum> metadata;
 
   CreatePostModel({
-    this.title,
+    required this.title,
     required this.tags,
     required this.metadata,
   });

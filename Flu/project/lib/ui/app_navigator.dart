@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/roots/register.dart';
 import 'package:project/ui/roots/searchpost.dart';
 import 'package:project/ui/roots/searchusers.dart';
 import 'package:project/ui/roots/settings.dart';
@@ -11,6 +12,7 @@ import 'roots/loader.dart';
 class NavigationRoutes {
   static const loaderWidget = "/";
   static const auth = "/auth";
+  static const register = "/auth/register";
   static const profile = "/feed/profile";
   static const feed = "/feed";
   static const settings = "/settings";
@@ -31,9 +33,13 @@ class AppNavigator {
         ?.pushNamedAndRemoveUntil(NavigationRoutes.auth, ((route) => false));
   }
 
+  static void toRegister() {
+    key.currentState?.pushNamed(
+      NavigationRoutes.register,
+    );
+  }
+
   static void toProfile() {
-    //key.currentState
-    //   ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
     key.currentState?.pushNamed(NavigationRoutes.profile);
   }
 
@@ -47,14 +53,10 @@ class AppNavigator {
   }
 
   static void toSearchUser() {
-    //key.currentState
-    //    ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
     key.currentState?.pushNamed(NavigationRoutes.searchuser);
   }
 
   static void toSearchPost() {
-    // key.currentState
-    //     ?.pushNamedAndRemoveUntil(NavigationRoutes.feed, ((route) => false));
     key.currentState?.pushNamed(NavigationRoutes.searchpost);
   }
 
@@ -69,6 +71,9 @@ class AppNavigator {
             pageBuilder: ((_, __, ___) => LoaderWidget.create()));
       case NavigationRoutes.auth:
         return PageRouteBuilder(pageBuilder: ((_, __, ___) => Auth.create()));
+      case NavigationRoutes.register:
+        return PageRouteBuilder(
+            pageBuilder: ((_, __, ___) => Register.create()));
       case NavigationRoutes.profile:
         return PageRouteBuilder(
             pageBuilder: ((_, __, ___) => Profile.create()));
