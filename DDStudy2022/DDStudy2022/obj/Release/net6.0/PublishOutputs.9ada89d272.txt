@@ -1,6 +1,7 @@
 F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\PubTmp\Out\Api.exe
 F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\PubTmp\Out\appsettings.Development.json
 F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\PubTmp\Out\appsettings.json
+F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\PubTmp\Out\libman.json
 F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\PubTmp\Out\Api.dll
 F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\PubTmp\Out\Api.runtimeconfig.json
 F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\PubTmp\Out\Api.pdb

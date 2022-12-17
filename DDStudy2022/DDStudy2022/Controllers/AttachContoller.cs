@@ -111,13 +111,13 @@ namespace Api.Controllers
             var fileinfo = new FileInfo(newPath);
             if (fileinfo.Exists)
             {
-                throw new Exception("file exist");
+                throw new Exception("File already exists");
             }
             else
             {
                 if (fileinfo.Directory == null)
                 {
-                    throw new Exception("temp is null");
+                    throw new Exception("Temp is null, server error");
                 }
                 else
                 if (!fileinfo.Directory.Exists)

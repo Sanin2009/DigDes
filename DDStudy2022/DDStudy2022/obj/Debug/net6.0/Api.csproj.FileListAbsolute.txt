@@ -68,3 +68,4 @@ F:\ProjectDD\2022\DDStudy2022\DDSTudy2022\bin\Debug\net6.0\System.CodeDom.dll
 F:\ProjectDD\2022\DDStudy2022\DDSTudy2022\bin\Debug\net6.0\System.Text.Encodings.Web.dll
 F:\ProjectDD\2022\DDStudy2022\DDSTudy2022\bin\Debug\net6.0\System.Text.Json.dll
 F:\ProjectDD\2022\DDStudy2022\DDSTudy2022\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
+F:\ProjectDD\2022\DDStudy2022\DDStudy2022\bin\Debug\net6.0\libman.json

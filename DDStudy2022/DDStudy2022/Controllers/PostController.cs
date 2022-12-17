@@ -73,7 +73,7 @@ namespace Api.Controllers
         public async Task<List<ShowScrollPostModel>> GetAllPosts(int skip = 0, int take = 10)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            return await _postService.GetAllPosts(skip, take, userId);
+            return await _postService.GetAllPosts(userId, skip, take);
         }
 
         [HttpGet]

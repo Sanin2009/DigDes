@@ -61,3 +61,4 @@ F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\refint\Api.dll
 F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\Api.pdb
 F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\Api.genruntimeconfig.cache
 F:\ProjectDD\2022\DDStudy2022\DDStudy2022\obj\Release\net6.0\ref\Api.dll
+F:\ProjectDD\2022\DDStudy2022\DDStudy2022\bin\Release\net6.0\libman.json
