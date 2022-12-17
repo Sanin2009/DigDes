@@ -55,10 +55,10 @@ namespace Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<Comment> AddComment(Guid postId, string msg)
+        public async Task AddComment(Guid postId, string msg)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            return await _postService.AddComment(userId, postId, msg);
+            await _postService.AddComment(userId, postId, msg);
         }
 
         [HttpPost]
@@ -118,10 +118,10 @@ namespace Api.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<Comment> EditComment(Guid commentId, string msg)
+        public async Task EditComment(Guid commentId, string msg)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            return await _postService.EditComment(userId, commentId, msg);
+            await _postService.EditComment(userId, commentId, msg);
         }
 
         [HttpDelete]

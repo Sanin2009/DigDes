@@ -36,7 +36,7 @@ namespace Api.Services
                 UserId = userId,
                 User = user,
                 Name = title,
-                Created = DateTime.UtcNow,
+                Created = DateTimeOffset.UtcNow,
                 Id = Guid.NewGuid(),
                 TagString = tags ?? " "                
             });
@@ -45,7 +45,7 @@ namespace Api.Services
         }
 
 
-        public async Task<Comment> AddComment(Guid userId, Guid postId, string msg)
+        public async Task AddComment(Guid userId, Guid postId, string msg)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
@@ -55,13 +55,12 @@ namespace Api.Services
             {
                 User = user,
                 UserPost = post,
-                Created = DateTime.UtcNow,
+                Created = DateTimeOffset.UtcNow,
                 Id = Guid.NewGuid(),
                 Message = msg,
                 Name = user.Name
             });
             await _context.SaveChangesAsync();
-            return newcomment.Entity;
         }
 
         public async Task<List<ShowCommentModel>> ShowComments(Guid postId)
@@ -84,13 +83,12 @@ namespace Api.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Comment> EditComment(Guid userId, Guid commentId, string msg)
+        public async Task EditComment(Guid userId, Guid commentId, string msg)
         {
             var comment = await _context.Comments.Where(x => (x.Id == commentId) && (x.UserId == userId)).ToListAsync();
             if (comment.IsNullOrEmpty()) throw new NoAccess();
             comment[0].Message = msg;
             await _context.SaveChangesAsync();
-            return comment[0];
         }
 
         public async Task AddImageToPost(Guid userId, UserPost postId, MetadataModel model, string filepath)
@@ -105,7 +103,7 @@ namespace Api.Services
                 FilePath = filepath,
                 Name = model.Name,
                 Size = model.Size,
-                Created = DateTimeOffset.Now,
+                Created = DateTimeOffset.UtcNow,
             });
             await _context.SaveChangesAsync();
         }
