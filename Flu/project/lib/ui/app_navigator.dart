@@ -5,7 +5,7 @@ import 'package:project/ui/roots/searchpost.dart';
 import 'package:project/ui/roots/searchusers.dart';
 import 'package:project/ui/roots/settings.dart';
 
-import 'roots/profile.dart';
+import 'profile/profile.dart';
 import 'roots/auth.dart';
 import 'roots/feed.dart';
 import 'roots/loader.dart';

@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:project/domain/models/post.dart';
+
 import '../../domain/models/refresh_token_request.dart';
 import '../../domain/models/token_request.dart';
 import '../../domain/models/token_response.dart';
@@ -30,4 +34,15 @@ class ApiDataRepository extends ApiRepository {
 
   @override
   Future<User?> getUser() => _api.getUser();
+
+  @override
+  Future<List<ShowPost>> getPosts(int skip, int take) =>
+      _api.getPosts(skip, take);
+
+  @override
+  Future<List<Metadatum>> uploadTemp({required List<File> files}) =>
+      _api.uploadTemp(files: files);
+
+  @override
+  Future addAvatarToUser(Metadatum model) => _api.addAvatarToUser(model);
 }

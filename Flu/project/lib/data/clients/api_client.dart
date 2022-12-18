@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:project/domain/models/post.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../../domain/models/user.dart';
@@ -11,4 +14,15 @@ abstract class ApiClient {
 
   @GET("/api/User/GetCurrentUser")
   Future<User?> getUser();
+
+  @GET("/api/Post/GetAllPosts")
+  Future<List<ShowPost>> getPosts(
+      @Query("skip") int skip, @Query("take") int take);
+
+  @POST("/api/Attach/AddAvatarToUser")
+  Future addAvatarToUser(@Body() Metadatum model);
+
+  @POST("/api/Attach/UploadFiles")
+  Future<List<Metadatum>> uploadTemp(
+      {@Part(name: "files") required List<File> files});
 }

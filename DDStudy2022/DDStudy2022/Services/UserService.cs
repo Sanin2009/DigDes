@@ -72,7 +72,7 @@ namespace Api.Services
                     FilePath = filePath, 
                     Name = meta.Name, 
                     Size = meta.Size,
-                    Created = DateTimeOffset.Now,
+                    Created = DateTimeOffset.UtcNow,
                 });
                 await _context.SaveChangesAsync();
             }

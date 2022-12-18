@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../domain/models/user.dart';
 import '../../internal/config/shared_prefs.dart';
 import '../../internal/config/token_storage.dart';
-import '../widgets/bottom_app_bar_widget.dart';
+import '../common/bottom_app_bar_widget.dart';
 
 class _ViewModel extends ChangeNotifier {
   BuildContext context;

@@ -43,6 +43,11 @@ dependencies:
   json_serializable: ^6.5.4
   json_annotation: ^4.7.0
   flutter_secure_storage: 5.0.2
+  sqflite: ^2.2.2
+  path: ^1.8.0
+  path_provider: ^2.0.1
+  intl: ^0.17.0
+  camera: ^0.10.0+5
 
 dev_dependencies:
   flutter_test:

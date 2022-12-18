@@ -41,7 +41,7 @@ namespace Api.Controllers
         public async Task AddAvatarToUser(MetadataModel model)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            if (userId == default)
+            if (userId != default)
             {
                 var tempFi = new FileInfo(Path.Combine(Path.GetTempPath(), model.TempId.ToString()));
                 if (!tempFi.Exists)
