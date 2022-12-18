@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/roots/create_post.dart';
 import 'package:project/ui/roots/register.dart';
 import 'package:project/ui/roots/searchpost.dart';
 import 'package:project/ui/roots/searchusers.dart';
@@ -18,6 +19,7 @@ class NavigationRoutes {
   static const settings = "/settings";
   static const searchuser = "/feed/searchuser";
   static const searchpost = "/feed/searchpost";
+  static const createpost = "/createpost";
 }
 
 class AppNavigator {
@@ -31,6 +33,10 @@ class AppNavigator {
   static void toAuth() {
     key.currentState
         ?.pushNamedAndRemoveUntil(NavigationRoutes.auth, ((route) => false));
+  }
+
+  static void toCreatePost() {
+    key.currentState?.pushNamed(NavigationRoutes.createpost);
   }
 
   static void toRegister() {
@@ -79,6 +85,9 @@ class AppNavigator {
             pageBuilder: ((_, __, ___) => Profile.create()));
       case NavigationRoutes.feed:
         return PageRouteBuilder(pageBuilder: ((_, __, ___) => Feed.create()));
+      case NavigationRoutes.createpost:
+        return PageRouteBuilder(
+            pageBuilder: ((_, __, ___) => CreatePost.create()));
       case NavigationRoutes.settings:
         return PageRouteBuilder(
             pageBuilder: ((_, __, ___) => Settings.create()));

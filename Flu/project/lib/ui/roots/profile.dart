@@ -73,9 +73,44 @@ class Profile extends StatelessWidget {
       body: (u != null)
           ? ListView(
               children: [
-                Image(
-                    image: NetworkImage("$baseUrl${u.avatarLink}",
-                        headers: viewModel.headers)),
+                Stack(
+                  alignment: Alignment.topCenter,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(20),
+                      width: 220,
+                      height: 220,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(20),
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: NetworkImage("$baseUrl${u.avatarLink}"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Spacer(),
+                    IconButton(
+                      icon: Icon(
+                        Icons.camera_alt_rounded,
+                        color: Colors.blue,
+                      ),
+                      onPressed: (() => {}),
+                    ),
+                    const Spacer()
+                  ],
+                ),
                 Row(
                   children: [
                     const Spacer(),
@@ -98,7 +133,8 @@ class Profile extends StatelessWidget {
                         onPressed: () {},
                         child: Align(
                           alignment: Alignment.center,
-                          child: Text("Subscribers: ${u.totalSubs}"),
+                          child: Text("Subscribers: ${u.totalSubs}",
+                              style: const TextStyle(color: Colors.blue)),
                         )),
                     const Spacer()
                   ],
@@ -116,30 +152,34 @@ class Profile extends StatelessWidget {
                 Row(
                   children: [
                     const Spacer(),
-                    TextButton(
-                        onPressed: () {},
-                        child: const Card(
-                            child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Update status",
-                            textAlign: TextAlign.center,
-                          ),
-                        ))),
+                    Card(
+                      child: TextButton(
+                          onPressed: () {},
+                          child: const Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "Update status",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          )),
+                    ),
                     const Spacer()
                   ],
                 ),
                 Row(),
-                TextButton(
-                    onPressed: () {},
-                    child: const Card(
-                        child: Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        "Create a post",
-                        textAlign: TextAlign.center,
-                      ),
-                    )))
+                Card(
+                  child: TextButton(
+                      onPressed: () {
+                        AppNavigator.toCreatePost();
+                      },
+                      child: const Align(
+                          alignment: Alignment.center,
+                          child: Text("Create a post",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.blue)))),
+                ),
+                const Text("Your posts:"),
               ],
             )
           : null,
