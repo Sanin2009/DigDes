@@ -151,7 +151,7 @@ class _FeedState extends State<Feed> {
                                         post.showPostModel.attaches!.length,
                                     itemBuilder: (pageContext, pageIndex) =>
                                         Container(
-                                      color: Colors.yellow,
+                                      color: Colors.grey,
                                       child: Image(
                                           image: NetworkImage(
                                         "$baseUrl${post.showPostModel.attaches![pageIndex]}",

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:project/domain/models/post.dart';
 import 'package:provider/provider.dart';
@@ -5,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../data/services/auth_service.dart';
 import '../../internal/dependencies/repository_module.dart';
 import '../app_navigator.dart';
+import '../common/cam_widget.dart';
 
 class _ViewModelState {
   final String? title;
@@ -37,6 +40,7 @@ class _ViewModel extends ChangeNotifier {
   var postImages = <Metadatum>[];
   final _authService = AuthService();
   final _api = RepositoryModule.apiRepository();
+  String? _imagePath;
 
   BuildContext context;
   _ViewModel({required this.context}) {
@@ -77,6 +81,29 @@ class _ViewModel extends ChangeNotifier {
       state = state.copyWith(errorText: "произошла ошибка на сервере");
     }
   }
+
+  Future addPhoto() async {
+    //var appmodel = context.read<FeedViewModel>();
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (newContext) => Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(backgroundColor: Colors.black),
+        body: SafeArea(
+          child: CamWidget(
+            onFile: (file) {
+              _imagePath = file.path;
+              Navigator.of(newContext).pop();
+            },
+          ),
+        ),
+      ),
+    ));
+    if (_imagePath != null) {
+      var t = await _api.uploadTemp(files: [File(_imagePath!)]);
+      if (t.isNotEmpty) postImages.add(t[0]);
+      // appmodel.avatar = avImage;
+    }
+  }
 }
 
 class CreatePost extends StatelessWidget {
@@ -112,7 +139,7 @@ class CreatePost extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.photo_camera_back),
                   onPressed: () {
-                    //ToDo;
+                    viewModel.addPhoto();
                   },
                 ),
                 ElevatedButton(

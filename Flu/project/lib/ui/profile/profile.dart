@@ -52,14 +52,14 @@ class Profile extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      margin: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(30),
                       width: 200,
                       height: 200,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage("$baseUrl${u.avatarLink}"),
-                        ),
+                            image: NetworkImage("$baseUrl${u.avatarLink}"),
+                            fit: BoxFit.cover),
                       ),
                     ),
                   ],
