@@ -39,9 +39,7 @@ class _ViewModel extends ChangeNotifier {
   }
 
   User? _user;
-
   User? get user => _user;
-
   set user(User? val) {
     _user = val;
     notifyListeners();

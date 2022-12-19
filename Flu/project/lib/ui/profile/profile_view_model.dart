@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
 import '../../domain/models/user.dart';
@@ -12,7 +11,6 @@ import '../../internal/config/token_storage.dart';
 import '../../internal/dependencies/repository_module.dart';
 import '../app_navigator.dart';
 import '../common/cam_widget.dart';
-import '../roots/feed.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   final _api = RepositoryModule.apiRepository();

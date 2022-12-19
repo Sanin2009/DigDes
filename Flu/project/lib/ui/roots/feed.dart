@@ -72,7 +72,6 @@ class FeedViewModel extends ChangeNotifier {
       fit: BoxFit.fill,
     );
 
-    //await SyncService().syncPosts();
     posts = await _api.getAllPosts(0, 10);
   }
 
@@ -103,18 +102,10 @@ class _FeedState extends State<Feed> {
     var viewModel = context.watch<FeedViewModel>();
     var itemCount = viewModel.posts?.length ?? 0;
     var size = MediaQuery.of(context).size;
-    var u = viewModel.user;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
-        leading: (u != null && viewModel.headers != null)
-            ? CircleAvatar(
-                backgroundImage: NetworkImage("$baseUrl${u.avatarLink}",
-                    headers: viewModel.headers),
-              )
-            : null,
-        title:
-            Text(u == null ? "Hello!" : "Hello, ${u.name} - ${widget.title}"),
+        title: const Text("Feed"),
         actions: [
           IconButton(
             icon: const Icon(Icons.exit_to_app),
@@ -137,7 +128,7 @@ class _FeedState extends State<Feed> {
                           var post = posts[listIndex];
                           res = Container(
                             padding: const EdgeInsets.all(10),
-                            height: (post.showPostModel.attaches!.length > 0)
+                            height: (post.showPostModel.attaches!.isNotEmpty)
                                 ? size.width
                                 : 40,
                             color: Colors.grey,

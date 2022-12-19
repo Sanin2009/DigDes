@@ -33,7 +33,6 @@ class _ViewModel extends ChangeNotifier {
 
 class Settings extends StatefulWidget {
   const Settings({Key? key, required this.title}) : super(key: key);
-
   final String title;
 
   static create() {

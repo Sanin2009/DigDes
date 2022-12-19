@@ -50,7 +50,6 @@ class _ViewModel extends ChangeNotifier {
   var passwTec = TextEditingController();
   var passagainTec = TextEditingController();
   var bdayTec = TextEditingController();
-  final _authService = AuthService();
 
   BuildContext context;
   _ViewModel({required this.context}) {
@@ -93,13 +92,12 @@ class _ViewModel extends ChangeNotifier {
   // ToDo 90?%
   void register() async {
     state = state.copyWith(isLoading: true);
-    CreateUserModel newUser = new CreateUserModel(
+    CreateUserModel newUser = CreateUserModel(
         name: state.name,
         email: state.login,
         password: state.password,
         retryPassword: state.passwordAgain,
         birthDay: state.birthday);
-
     try {
       await _api.createUser(newUser).then((value) {
         AppNavigator.toLoader()

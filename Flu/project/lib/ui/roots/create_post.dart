@@ -38,7 +38,6 @@ class _ViewModel extends ChangeNotifier {
   var titleTec = TextEditingController();
   var tagTec = TextEditingController();
   var postImages = <Metadatum>[];
-  final _authService = AuthService();
   final _api = RepositoryModule.apiRepository();
   String? _imagePath;
 
@@ -83,7 +82,6 @@ class _ViewModel extends ChangeNotifier {
   }
 
   Future addPhoto() async {
-    //var appmodel = context.read<FeedViewModel>();
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (newContext) => Scaffold(
         backgroundColor: Colors.black,
@@ -101,7 +99,7 @@ class _ViewModel extends ChangeNotifier {
     if (_imagePath != null) {
       var t = await _api.uploadTemp(files: [File(_imagePath!)]);
       if (t.isNotEmpty) postImages.add(t[0]);
-      // appmodel.avatar = avImage;
+      notifyListeners();
     }
   }
 }
@@ -142,6 +140,7 @@ class CreatePost extends StatelessWidget {
                     viewModel.addPhoto();
                   },
                 ),
+                Text("Images attached:${viewModel.postImages.length}"),
                 ElevatedButton(
                     onPressed:
                         viewModel.checkFields() ? viewModel.createPost : null,

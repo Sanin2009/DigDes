@@ -68,7 +68,7 @@ class Profile extends StatelessWidget {
                   children: [
                     const Spacer(),
                     IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.camera_alt_rounded,
                         color: Colors.blue,
                       ),

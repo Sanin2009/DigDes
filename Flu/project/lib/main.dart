@@ -6,8 +6,6 @@ import 'ui/app_navigator.dart';
 import 'ui/roots/loader.dart';
 
 void main() {
-  // fix?
-  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -26,14 +24,5 @@ class MyApp extends StatelessWidget {
       ),
       home: LoaderWidget.create(),
     );
-  }
-}
-
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
   }
 }
