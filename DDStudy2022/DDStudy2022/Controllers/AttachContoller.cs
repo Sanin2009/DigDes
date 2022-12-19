@@ -64,7 +64,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         public async Task<FileResult> GetAttach(Guid attachId)
         {
             // Access check (may be?)

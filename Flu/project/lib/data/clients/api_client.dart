@@ -16,7 +16,7 @@ abstract class ApiClient {
   Future<User?> getUser();
 
   @GET("/api/Post/GetAllPosts")
-  Future<List<ShowPost>> getPosts(
+  Future<List<ShowPost>> getAllPosts(
       @Query("skip") int skip, @Query("take") int take);
 
   @POST("/api/Attach/AddAvatarToUser")

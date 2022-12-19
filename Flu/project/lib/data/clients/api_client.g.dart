@@ -42,7 +42,7 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<List<ShowPost>> getPosts(
+  Future<List<ShowPost>> getAllPosts(
     skip,
     take,
   ) async {

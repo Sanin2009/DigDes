@@ -9,7 +9,7 @@ abstract class ApiRepository {
       {required String login, required String password});
   Future<TokenResponse?> refreshToken(String refreshToken);
   Future<User?> getUser();
-  Future<List<ShowPost>> getPosts(int skip, int take);
+  Future<List<ShowPost>> getAllPosts(int skip, int take);
   Future<List<Metadatum>> uploadTemp({required List<File> files});
   Future addAvatarToUser(Metadatum model);
 }

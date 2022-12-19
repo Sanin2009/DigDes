@@ -9,12 +9,12 @@ part of 'post.dart';
 ShowPost _$ShowPostFromJson(Map<String, dynamic> json) => ShowPost(
       showPostModel:
           ShowPostModel.fromJson(json['showPostModel'] as Map<String, dynamic>),
-      user: User.fromJson(json['user'] as Map<String, dynamic>),
+      userModel: User.fromJson(json['userModel'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ShowPostToJson(ShowPost instance) => <String, dynamic>{
       'showPostModel': instance.showPostModel,
-      'user': instance.user,
+      'userModel': instance.userModel,
     };
 
 ShowPostModel _$ShowPostModelFromJson(Map<String, dynamic> json) =>

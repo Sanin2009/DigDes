@@ -8,12 +8,14 @@ import '../../domain/models/user.dart';
 import '../../internal/config/app_config.dart';
 import '../../internal/config/shared_prefs.dart';
 import '../../internal/config/token_storage.dart';
+import '../../internal/dependencies/repository_module.dart';
 import '../app_navigator.dart';
 import '../common/bottom_app_bar_widget.dart';
 
 class FeedViewModel extends ChangeNotifier {
   BuildContext context;
   final _authService = AuthService();
+  final _api = RepositoryModule.apiRepository();
   //final _lvc = ScrollController();
 
   bool _isLoading = false;
@@ -71,7 +73,7 @@ class FeedViewModel extends ChangeNotifier {
     );
 
     //await SyncService().syncPosts();
-    //posts = await _dataService.getPosts();
+    posts = await _api.getAllPosts(0, 10);
   }
 
   void logout() {
@@ -96,17 +98,11 @@ class Feed extends StatefulWidget {
 }
 
 class _FeedState extends State<Feed> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     var viewModel = context.watch<FeedViewModel>();
+    var itemCount = viewModel.posts?.length ?? 0;
+    var size = MediaQuery.of(context).size;
     var u = viewModel.user;
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -117,9 +113,8 @@ class _FeedState extends State<Feed> {
                     headers: viewModel.headers),
               )
             : null,
-        title: Text(u == null
-            ? "Hello!"
-            : "Hello, ${u.name} - ${widget.title} - $_counter "),
+        title:
+            Text(u == null ? "Hello!" : "Hello, ${u.name} - ${widget.title}"),
         actions: [
           IconButton(
             icon: const Icon(Icons.exit_to_app),
@@ -127,13 +122,90 @@ class _FeedState extends State<Feed> {
           )
         ],
       ),
-      body: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.post_add),
-      ),
+      body: Container(
+          child: viewModel.posts == null
+              ? const Center(child: CircularProgressIndicator())
+              : Column(
+                  children: [
+                    Expanded(
+                        child: ListView.separated(
+                      //controller: viewModel._lvc,
+                      itemBuilder: (listContext, listIndex) {
+                        Widget res;
+                        var posts = viewModel.posts;
+                        if (posts != null) {
+                          var post = posts[listIndex];
+                          res = Container(
+                            padding: const EdgeInsets.all(10),
+                            height: (post.showPostModel.attaches!.length > 0)
+                                ? size.width
+                                : 40,
+                            color: Colors.grey,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: PageView.builder(
+                                    onPageChanged: (value) => viewModel
+                                        .onPageChanged(listIndex, value),
+                                    itemCount:
+                                        post.showPostModel.attaches!.length,
+                                    itemBuilder: (pageContext, pageIndex) =>
+                                        Container(
+                                      color: Colors.yellow,
+                                      child: Image(
+                                          image: NetworkImage(
+                                        "$baseUrl${post.showPostModel.attaches![pageIndex]}",
+                                      )),
+                                    ),
+                                  ),
+                                ),
+                                PageIndicator(
+                                  count: post.showPostModel.attaches!.length,
+                                  current: viewModel.pager[listIndex],
+                                ),
+                                Text(post.showPostModel.name)
+                              ],
+                            ),
+                          );
+                        } else {
+                          res = const SizedBox.shrink();
+                        }
+                        return res;
+                      },
+                      separatorBuilder: (context, index) => const Divider(),
+                      itemCount: itemCount,
+                    )),
+                    if (viewModel.isLoading) const LinearProgressIndicator()
+                  ],
+                )),
       bottomNavigationBar: BottomAppBarMenu(
           fabLocation: FloatingActionButtonLocation.centerDocked),
+    );
+  }
+}
+
+class PageIndicator extends StatelessWidget {
+  final int count;
+  final int? current;
+  final double width;
+  const PageIndicator(
+      {Key? key, required this.count, required this.current, this.width = 10})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> widgets = <Widget>[];
+    for (var i = 0; i < count; i++) {
+      widgets.add(
+        Icon(
+          Icons.circle,
+          size: i == (current ?? 0) ? width * 1.4 : width,
+        ),
+      );
+    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [...widgets],
     );
   }
 }

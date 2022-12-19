@@ -12,11 +12,11 @@ part 'post.g.dart';
 @JsonSerializable()
 class ShowPost {
   final ShowPostModel showPostModel;
-  final User user;
+  final User userModel;
 
   ShowPost({
     required this.showPostModel,
-    required this.user,
+    required this.userModel,
   });
 
   factory ShowPost.fromJson(Map<String, dynamic> json) =>
