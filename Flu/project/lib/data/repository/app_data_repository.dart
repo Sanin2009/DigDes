@@ -51,4 +51,9 @@ class ApiDataRepository extends ApiRepository {
   Future createUser(CreateUserModel createUserModel) async {
     await _auth.createUser(createUserModel);
   }
+
+  @override
+  Future createPost(CreatePostModel createPostModel) async {
+    await _api.createPost(createPostModel);
+  }
 }

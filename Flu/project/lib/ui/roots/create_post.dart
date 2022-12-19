@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project/domain/models/post.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
+import '../../internal/dependencies/repository_module.dart';
 import '../app_navigator.dart';
 
 class _ViewModelState {
@@ -32,7 +34,9 @@ class _ViewModelState {
 class _ViewModel extends ChangeNotifier {
   var titleTec = TextEditingController();
   var tagTec = TextEditingController();
+  var postImages = <Metadatum>[];
   final _authService = AuthService();
+  final _api = RepositoryModule.apiRepository();
 
   BuildContext context;
   _ViewModel({required this.context}) {
@@ -57,15 +61,16 @@ class _ViewModel extends ChangeNotifier {
         (state.tags?.isNotEmpty ?? false);
   }
 
-  // ToDo 0%
+  // ToDo 50%
   void createPost() async {
     state = state.copyWith(isLoading: true);
-
+    var newPost = CreatePostModel(
+        title: state.title ?? " ",
+        tags: state.tags ?? " ",
+        metadata: postImages);
     try {
-      await _authService.auth(state.title, state.tags).then((value) {
-        AppNavigator.toLoader()
-            .then((value) => {state = state.copyWith(isLoading: false)});
-      });
+      await _api.createPost(newPost);
+      AppNavigator.toBack();
     } on NoNetworkException {
       state = state.copyWith(errorText: "нет сети");
     } on ServerException {

@@ -15,4 +15,5 @@ abstract class ApiRepository {
   Future<List<Metadatum>> uploadTemp({required List<File> files});
   Future addAvatarToUser(Metadatum model);
   Future createUser(CreateUserModel createUserModel);
+  Future createPost(CreatePostModel createPostModel);
 }

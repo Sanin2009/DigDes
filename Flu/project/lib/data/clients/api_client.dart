@@ -19,6 +19,9 @@ abstract class ApiClient {
   Future<List<ShowPost>> getAllPosts(
       @Query("skip") int skip, @Query("take") int take);
 
+  @POST("/api/Post/CreatePost")
+  Future createPost(@Body() CreatePostModel createPostModel);
+
   @POST("/api/Attach/AddAvatarToUser")
   Future addAvatarToUser(@Body() Metadatum model);
 
