@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../data/services/auth_service.dart';
 import '../../domain/models/post.dart';
 import '../../domain/models/user.dart';
+import '../../helper.dart';
 import '../../internal/config/app_config.dart';
 import '../../internal/config/shared_prefs.dart';
 import '../../internal/config/token_storage.dart';
@@ -129,11 +130,31 @@ class _FeedState extends State<Feed> {
                           res = Container(
                             padding: const EdgeInsets.all(10),
                             height: (post.showPostModel.attaches!.isNotEmpty)
-                                ? size.width
-                                : 40,
-                            color: Colors.grey,
+                                ? size.width + 150
+                                : 120,
+                            color: Colors.white,
                             child: Column(
                               children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                "$baseUrl${post.userModel.avatarLink}"),
+                                            fit: BoxFit.cover),
+                                      ),
+                                    ),
+                                    Text(
+                                        "  ${post.userModel.name}: ${post.showPostModel.name}"),
+                                    const Spacer(),
+                                    Text(
+                                        "${DateTime.parse(post.showPostModel.created).day.toString()} of ${Helper.GetMonth(DateTime.parse(post.showPostModel.created).month.toString())}")
+                                  ],
+                                ),
                                 Expanded(
                                   child: PageView.builder(
                                     onPageChanged: (value) => viewModel
@@ -141,12 +162,18 @@ class _FeedState extends State<Feed> {
                                     itemCount:
                                         post.showPostModel.attaches!.length,
                                     itemBuilder: (pageContext, pageIndex) =>
-                                        Container(
-                                      color: Colors.grey,
-                                      child: Image(
-                                          image: NetworkImage(
-                                        "$baseUrl${post.showPostModel.attaches![pageIndex]}",
-                                      )),
+                                        Column(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            color: Colors.white,
+                                            child: Image(
+                                                image: NetworkImage(
+                                              "$baseUrl${post.showPostModel.attaches![pageIndex]}",
+                                            )),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -154,7 +181,21 @@ class _FeedState extends State<Feed> {
                                   count: post.showPostModel.attaches!.length,
                                   current: viewModel.pager[listIndex],
                                 ),
-                                Text(post.showPostModel.name)
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      iconSize: 40,
+                                      icon: const Icon(Icons.thumb_up),
+                                      onPressed: () {},
+                                    ),
+                                    const Spacer(),
+                                    IconButton(
+                                      iconSize: 40,
+                                      icon: const Icon(Icons.chat_bubble),
+                                      onPressed: () {},
+                                    )
+                                  ],
+                                )
                               ],
                             ),
                           );
