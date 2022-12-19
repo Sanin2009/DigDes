@@ -44,6 +44,29 @@ class _AuthClient implements AuthClient {
   }
 
   @override
+  Future<dynamic> createUser(createUserModel) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(createUserModel.toJson());
+    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/Auth/CreateUser',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data;
+    return value;
+  }
+
+  @override
   Future<TokenResponse?> refreshToken(body) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

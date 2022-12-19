@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:project/domain/models/create_user_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
+import '../../internal/dependencies/repository_module.dart';
 import '../app_navigator.dart';
 
 class _ViewModelState {
@@ -42,6 +44,7 @@ class _ViewModelState {
 }
 
 class _ViewModel extends ChangeNotifier {
+  final _api = RepositoryModule.apiRepository();
   var loginTec = TextEditingController();
   var nameTec = TextEditingController();
   var passwTec = TextEditingController();
@@ -75,21 +78,30 @@ class _ViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  //ToDo 50%
   bool checkFields() {
     return (state.login?.isNotEmpty ?? false) &&
         (state.password?.isNotEmpty ?? false) &&
         (state.passwordAgain?.isNotEmpty ?? false) &&
         (state.name?.isNotEmpty ?? false) &&
-        (state.birthday?.isNotEmpty ?? false);
+        (state.birthday?.isNotEmpty ?? false) &&
+        (state.name!.length > 3) &&
+        (state.login!.length > 3) &&
+        (state.password!.length > 3) &&
+        (state.password == state.passwordAgain);
   }
 
-  // ToDo 0%
+  // ToDo 90?%
   void register() async {
     state = state.copyWith(isLoading: true);
+    CreateUserModel newUser = new CreateUserModel(
+        name: state.name,
+        email: state.login,
+        password: state.password,
+        retryPassword: state.passwordAgain,
+        birthDay: state.birthday);
 
     try {
-      await _authService.auth(state.login, state.password).then((value) {
+      await _api.createUser(newUser).then((value) {
         AppNavigator.toLoader()
             .then((value) => {state = state.copyWith(isLoading: false)});
       });
@@ -129,7 +141,7 @@ class Register extends StatelessWidget {
                 TextField(
                   controller: viewModel.bdayTec,
                   decoration: const InputDecoration(
-                      hintText: "Birthday, format dd.mm.yyyy"),
+                      hintText: "Birthday, format yyyy-mm-dd"),
                 ),
                 TextField(
                     controller: viewModel.passwTec,

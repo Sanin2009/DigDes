@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:project/domain/models/create_user_model.dart';
 import 'package:project/domain/models/post.dart';
 
 import '../../domain/models/refresh_token_request.dart';
@@ -45,4 +46,9 @@ class ApiDataRepository extends ApiRepository {
 
   @override
   Future addAvatarToUser(Metadatum model) => _api.addAvatarToUser(model);
+
+  @override
+  Future createUser(CreateUserModel createUserModel) async {
+    await _auth.createUser(createUserModel);
+  }
 }
