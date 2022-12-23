@@ -67,13 +67,13 @@ class _ViewModel extends ChangeNotifier {
             .then((value) => {state = state.copyWith(isLoading: false)});
       });
     } on NoNetworkException {
-      state = state.copyWith(errorText: "нет сети");
+      state = state.copyWith(errorText: "offline");
     } on WrongCredentionalException {
-      state = state.copyWith(errorText: "неправильный логин или пароль");
+      state = state.copyWith(errorText: "wrong login or password");
     } on NotFoundException {
-      state = state.copyWith(errorText: "неправильный логин или пароль");
+      state = state.copyWith(errorText: "wrong login or password");
     } on ServerException {
-      state = state.copyWith(errorText: "произошла ошибка на сервере");
+      state = state.copyWith(errorText: "server error");
     }
   }
 }

@@ -121,6 +121,8 @@ class _FeedState extends State<Feed> {
                   children: [
                     Expanded(
                         child: ListView.separated(
+                      separatorBuilder: (context, index) => const Divider(),
+                      itemCount: itemCount,
                       //controller: viewModel._lvc,
                       itemBuilder: (listContext, listIndex) {
                         Widget res;
@@ -204,8 +206,6 @@ class _FeedState extends State<Feed> {
                         }
                         return res;
                       },
-                      separatorBuilder: (context, index) => const Divider(),
-                      itemCount: itemCount,
                     )),
                     if (viewModel.isLoading) const LinearProgressIndicator()
                   ],
