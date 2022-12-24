@@ -69,8 +69,10 @@ namespace Api.Services
 
         public async Task DeleteComment(Guid userId, Guid commentId)
         {
-            var comment = await _context.Comments.FirstOrDefaultAsync(x => (x.Id == commentId) && x.UserId == userId); 
-            if (comment==null) throw new NoAccess();
+            var comment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == commentId);
+            if (comment == null) throw new NoAccess();
+            var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == comment.UserPostId);
+            if ((comment.UserPostId!=userId) && (comment.UserId!=userId)) throw new NoAccess();
             _context.Remove(comment);
             await _context.SaveChangesAsync();
         }
@@ -110,7 +112,6 @@ namespace Api.Services
         public async Task<ShowPostModel> GetPostInfo(UserPost post, Guid userId)
         {
             if (post == null) throw new NotFound("Post");
-            //var attaches = await _context.PostImages.Where(x => x.UserPostId == post.Id).ToListAsync();
             var attachLinks = new List<string>();
             foreach (var attachment in post.PostImages)
             {
@@ -155,10 +156,9 @@ namespace Api.Services
 
         public async Task<ShowScrollPostModel> GetPost(UserPost post, Guid userId)
         {
-            //var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("Post");
             var t1 = await GetPostInfo(post, userId);
-            var t2 = await GetUser(post.UserId);
+            var t2 = _mapper.Map<UserModel>(post.User);
             return new ShowScrollPostModel(t1, t2);
         }
 
