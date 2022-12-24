@@ -44,7 +44,6 @@ namespace Api.Services
             return newpost.Entity;
         }
 
-
         public async Task AddComment(Guid userId, Guid postId, string msg)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
@@ -111,9 +110,9 @@ namespace Api.Services
         public async Task<ShowPostModel> GetPostInfo(UserPost post, Guid userId)
         {
             if (post == null) throw new NotFound("Post");
-            var attaches = await _context.PostImages.Where(x => x.UserPostId == post.Id).ToListAsync();
+            //var attaches = await _context.PostImages.Where(x => x.UserPostId == post.Id).ToListAsync();
             var attachLinks = new List<string>();
-            foreach (var attachment in attaches)
+            foreach (var attachment in post.PostImages)
             {
                 attachLinks.Add(LinkHelper.Attach(attachment.Id));
             }
@@ -146,17 +145,17 @@ namespace Api.Services
         }
         public async Task<ShowFullPostModel> GetFullPost(Guid postId, Guid userId)
         {
-            var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
+            var post = await _context.UserPosts.Include(x => x.User).Include(x => x.PostImages).FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("Post");
             var t1 = await GetPostInfo(post, userId);
-            var t2 = await GetUser(post.UserId);
+            var t2 = await GetUserById(post.UserId);
             var t3 = await ShowComments(postId);
             return new ShowFullPostModel(t1, t2, t3);
         }
 
-        public async Task<ShowScrollPostModel> GetPost(Guid postId, Guid userId)
+        public async Task<ShowScrollPostModel> GetPost(UserPost post, Guid userId)
         {
-            var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
+            //var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == postId);
             if (post == null) throw new NotFound("Post");
             var t1 = await GetPostInfo(post, userId);
             var t2 = await GetUser(post.UserId);
@@ -172,25 +171,25 @@ namespace Api.Services
         {
             var temp = await _context.Subscribers.Where(x => (x.SubscriberId == userId) && (x.IsSubscribed == true))
                 .Include(x => x.Users).ThenInclude(u=>u.UserPosts)
-                .SelectMany(p=>p.Users.UserPosts).OrderByDescending(x=>x.Created)
+                .SelectMany(p=>p.Users.UserPosts).Include(x=>x.User).Include(x=>x.PostImages).OrderByDescending(x=>x.Created)
                 .Skip(skip).Take(take).AsNoTracking().ToListAsync();
             var result = new List<ShowScrollPostModel>();
             foreach (UserPost p in temp)
             {
-                var t = await GetPost(p.Id, userId);
+                var t = await GetPost(p, userId);
                 result.Add(t);
             }
             return result;
         }
 
-
         public async Task<List<ShowScrollPostModel>> GetAllPosts(Guid userId, int skip = 0, int take = 10)
         {
-            var temp = await _context.UserPosts.OrderByDescending(x => x.Created).Skip(skip).Take(take).ToListAsync();
+            var temp = await _context.Users.Where(x => x.IsOpen == true).Include(x => x.UserPosts).SelectMany(x => x.UserPosts)
+                .Include(x => x.User).Include(x => x.PostImages).OrderByDescending(x => x.Created).Skip(skip).Take(take).ToListAsync();
             var result = new List<ShowScrollPostModel>();
             foreach (UserPost p in temp)
             {
-                var t = await GetPost(p.Id, userId);
+                var t = await GetPost(p, userId);
                 result.Add(t);
             }
             return result;
@@ -204,11 +203,11 @@ namespace Api.Services
             var sub = await _context.Subscribers.AnyAsync(x=>(x.SubscriberId == subscriberId) && (x.UserId == userId) && (x.IsSubscribed));
             if ((userId==subscriberId) || (user.IsOpen) || (sub))
             {
-                var temp = await _context.UserPosts.OrderByDescending(x => x.Created).Where(x=>x.UserId == userId).Skip(skip).Take(take).ToListAsync();
+                var temp = await _context.UserPosts.Include(x => x.User).Include(x => x.PostImages).OrderByDescending(x => x.Created).Where(x=>x.UserId == userId).Skip(skip).Take(take).ToListAsync();
                 var result = new List<ShowScrollPostModel>();
                 foreach (UserPost p in temp)
                 {
-                    var t = await GetPost(p.Id, subscriberId);
+                    var t = await GetPost(p, subscriberId);
                     result.Add(t);
                 }
             return result;
@@ -218,11 +217,12 @@ namespace Api.Services
 
         public async Task<List<ShowScrollPostModel>> GetPostsByTag(int skip, int take, Guid userId, string inputTag)
         {
-            var temp = await _context.UserPosts.Where(x=>x.TagString.ToLower().Contains(inputTag.ToLower())).OrderByDescending(x => x.Created).Skip(skip).Take(take).ToListAsync();
+            var temp = await _context.Users.Where(x=>x.IsOpen==true).Include(x=>x.UserPosts).SelectMany(x=>x.UserPosts)
+                .Include(x => x.User).Include(x => x.PostImages).Where(x=>x.TagString.ToLower().Contains(inputTag.ToLower())).OrderByDescending(x => x.Created).Skip(skip).Take(take).ToListAsync();
             var result = new List<ShowScrollPostModel>();
             foreach (UserPost p in temp)
             {
-                var t = await GetPost(p.Id, userId);
+                var t = await GetPost(p, userId);
                 result.Add(t);
             }
             return result;
