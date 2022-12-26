@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
 import '../../internal/dependencies/repository_module.dart';
-import '../app_navigator.dart';
+import '../navigation/app_navigator.dart';
 
 class _ViewModelState {
   final String? login;
@@ -104,9 +104,9 @@ class _ViewModel extends ChangeNotifier {
             .then((value) => {state = state.copyWith(isLoading: false)});
       });
     } on NoNetworkException {
-      state = state.copyWith(errorText: "нет сети");
+      state = state.copyWith(errorText: "Offline");
     } on ServerException {
-      state = state.copyWith(errorText: "произошла ошибка на сервере");
+      state = state.copyWith(errorText: "Server Error");
     }
   }
 }

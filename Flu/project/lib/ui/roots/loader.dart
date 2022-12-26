@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
-import '../app_navigator.dart';
+import '../navigation/app_navigator.dart';
 
 class _ViewModel extends ChangeNotifier {
   final _authService = AuthService();
@@ -14,7 +14,7 @@ class _ViewModel extends ChangeNotifier {
 
   void _asyncInit() async {
     if (await _authService.checkAuth()) {
-      AppNavigator.toFeed();
+      AppNavigator.toApp();
     } else {
       AppNavigator.toAuth();
     }

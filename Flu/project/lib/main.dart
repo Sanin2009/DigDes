@@ -1,8 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
-import 'ui/app_navigator.dart';
+import 'ui/navigation/app_navigator.dart';
 import 'ui/roots/loader.dart';
 
 void main() {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
-import '../app_navigator.dart';
+import '../navigation/app_navigator.dart';
 
 class _ViewModelState {
   final String? login;

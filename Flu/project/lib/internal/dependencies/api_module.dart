@@ -4,7 +4,7 @@ import '../../data/clients/api_client.dart';
 import '../../data/clients/auth_client.dart';
 import '../../data/services/auth_service.dart';
 import '../../domain/models/refresh_token_request.dart';
-import '../../ui/app_navigator.dart';
+import '../../ui/navigation/app_navigator.dart';
 import '../config/app_config.dart';
 import '../config/token_storage.dart';
 
