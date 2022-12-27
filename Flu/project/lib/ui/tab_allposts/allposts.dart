@@ -11,12 +11,15 @@ import '../../internal/config/shared_prefs.dart';
 import '../../internal/config/token_storage.dart';
 import '../../internal/dependencies/repository_module.dart';
 import '../navigation/app_navigator.dart';
+import '../navigation/tab_navigator.dart';
 
 class AllPostsViewModel extends ChangeNotifier {
   BuildContext context;
   final _authService = AuthService();
   final _api = RepositoryModule.apiRepository();
-  //final _lvc = ScrollController();
+
+  int skip = 0;
+  int take = 10;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -25,12 +28,23 @@ class AllPostsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _isRefreshing = false;
+  bool get isRefreshing => _isRefreshing;
+  set isRefreshing(bool val) {
+    _isRefreshing = val;
+    notifyListeners();
+  }
+
   AllPostsViewModel({required this.context}) {
     asyncInit();
   }
 
-  User? _user;
+  void toPostDetail(ShowPost post) {
+    Navigator.of(context)
+        .pushNamed(TabNavigatorRoutes.postDetails, arguments: post);
+  }
 
+  User? _user;
   User? get user => _user;
 
   set user(User? val) {
@@ -44,6 +58,8 @@ class AllPostsViewModel extends ChangeNotifier {
     _avatar = val;
     notifyListeners();
   }
+
+  List<ShowPost>? newPosts;
 
   List<ShowPost>? _posts;
   List<ShowPost>? get posts => _posts;
@@ -61,18 +77,32 @@ class AllPostsViewModel extends ChangeNotifier {
 
   Map<String, String>? headers;
 
+  void addPosts() async {
+    isLoading = true;
+    newPosts = await _api.getAllPosts(skip, take);
+    skip += 10;
+    take += 10;
+    if (newPosts == null || newPosts!.isEmpty) return;
+    posts = <ShowPost>[...posts!, ...newPosts!];
+    isLoading = false;
+  }
+
+  void refresh() async {
+    isLoading = true;
+    skip = 0;
+    take = 10;
+    posts = await _api.getAllPosts(skip, take);
+    skip += 10;
+    isLoading = false;
+  }
+
   void asyncInit() async {
     user = await SharedPrefs.getStoredUser();
     var token = await TokenStorage.getAccessToken();
     headers = {"Authorization": "Bearer $token"};
-    var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
-        .load("$baseUrl${user!.avatarLink}");
-    avatar = Image.memory(
-      img.buffer.asUint8List(),
-      fit: BoxFit.fill,
-    );
 
-    posts = await _api.getAllPosts(0, 10);
+    posts = await _api.getAllPosts(skip, take);
+    skip += 10;
   }
 
   void logout() {
@@ -106,7 +136,6 @@ class _AllPostsState extends State<AllPosts> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
         title: const Text("All Posts"),
-        actions: [],
       ),
       body: Container(
           child: viewModel.posts == null
@@ -117,7 +146,6 @@ class _AllPostsState extends State<AllPosts> {
                         child: ListView.separated(
                       separatorBuilder: (context, index) => const Divider(),
                       itemCount: itemCount,
-                      //controller: viewModel._lvc,
                       itemBuilder: (listContext, listIndex) {
                         Widget res;
                         var posts = viewModel.posts;
@@ -144,11 +172,15 @@ class _AllPostsState extends State<AllPosts> {
                                             fit: BoxFit.cover),
                                       ),
                                     ),
-                                    Text(
-                                        "  ${post.userModel.name}: ${post.showPostModel.name}"),
-                                    const Spacer(),
-                                    Text(
-                                        "${DateTime.parse(post.showPostModel.created).day.toString()} of ${Helper.GetMonth(DateTime.parse(post.showPostModel.created).month.toString())}")
+                                    Expanded(
+                                      flex: 8,
+                                      child: Text(
+                                          "${post.userModel.name}: ${post.showPostModel.name}"),
+                                    ),
+                                    Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                            "${DateTime.parse(post.showPostModel.created).day.toString()} of ${Helper.GetMonth(DateTime.parse(post.showPostModel.created).month.toString())}"))
                                   ],
                                 ),
                                 Expanded(
@@ -190,7 +222,8 @@ class _AllPostsState extends State<AllPosts> {
                                       icon: const Icon(Icons.chat_bubble),
                                       label: Text(
                                           "${post.showPostModel.totalComments}"),
-                                      onPressed: () {},
+                                      onPressed: () =>
+                                          viewModel.toPostDetail(post),
                                     )
                                   ],
                                 )
@@ -203,6 +236,25 @@ class _AllPostsState extends State<AllPosts> {
                         return res;
                       },
                     )),
+                    Row(children: [
+                      Align(
+                        alignment: Alignment.bottomLeft,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            viewModel.refresh();
+                          },
+                          child: Icon(Icons.refresh),
+                        ),
+                      ),
+                      Spacer(),
+                      if (!viewModel.isLoading)
+                        FloatingActionButton(
+                          onPressed: () {
+                            viewModel.addPosts();
+                          },
+                          child: Icon(Icons.h_plus_mobiledata),
+                        ),
+                    ]),
                     if (viewModel.isLoading) const LinearProgressIndicator()
                   ],
                 )),
