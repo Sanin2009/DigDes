@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:project/domain/models/comment.dart';
 import 'package:project/domain/models/create_user_model.dart';
 import 'package:project/domain/models/post.dart';
 
@@ -55,5 +56,14 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future createPost(CreatePostModel createPostModel) async {
     await _api.createPost(createPostModel);
+  }
+
+  @override
+  Future<List<ShowCommentModel>> showComments(String postId) =>
+      _api.showComments(postId);
+
+  @override
+  Future addComment(String postId, String message) async {
+    await _api.addComment(postId, message);
   }
 }

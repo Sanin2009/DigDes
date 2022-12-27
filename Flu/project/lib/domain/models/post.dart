@@ -34,7 +34,7 @@ class ShowPostModel {
   List<String>? attaches;
   final int totalLikes;
   final bool likedByMe;
-  final int totalComments;
+  late final int totalComments;
 
   ShowPostModel({
     required this.id,

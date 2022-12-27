@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:project/domain/models/comment.dart';
 import 'package:project/domain/models/post.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -18,6 +19,13 @@ abstract class ApiClient {
   @GET("/api/Post/GetAllPosts")
   Future<List<ShowPost>> getAllPosts(
       @Query("skip") int skip, @Query("take") int take);
+
+  @POST("/api/Post/AddComment")
+  Future addComment(
+      @Query("postId") String postId, @Query("msg") String message);
+
+  @POST("/api/Post/ShowComments")
+  Future<List<ShowCommentModel>> showComments(@Query("postId") String postId);
 
   @POST("/api/Post/CreatePost")
   Future createPost(@Body() CreatePostModel createPostModel);
