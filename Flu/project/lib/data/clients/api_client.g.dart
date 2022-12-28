@@ -42,6 +42,29 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  Future<DynamicPostData> getDynamicPostData(postId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'postId': postId};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<DynamicPostData>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/Post/GetDynamicPostData',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = DynamicPostData.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<List<ShowPost>> getAllPosts(
     skip,
     take,

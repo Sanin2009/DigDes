@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:project/domain/models/comment.dart';
 import 'package:project/domain/models/create_user_model.dart';
+import 'package:project/domain/models/dynamic_post_data.dart';
 
 import '../models/post.dart';
 import '../models/token_response.dart';
@@ -12,6 +13,7 @@ abstract class ApiRepository {
       {required String login, required String password});
   Future<TokenResponse?> refreshToken(String refreshToken);
   Future<User?> getUser();
+  Future<DynamicPostData> getDynamicPostData(String postId);
   Future addComment(String postId, String message);
   Future<List<ShowPost>> getAllPosts(int skip, int take);
   Future<List<ShowCommentModel>> showComments(String postId);

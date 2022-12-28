@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:project/domain/models/comment.dart';
+import 'package:project/domain/models/dynamic_post_data.dart';
 import 'package:project/domain/models/post.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -15,6 +16,9 @@ abstract class ApiClient {
 
   @GET("/api/User/GetCurrentUser")
   Future<User?> getUser();
+
+  @GET("/api/Post/GetDynamicPostData")
+  Future<DynamicPostData> getDynamicPostData(@Query("postId") String postId);
 
   @GET("/api/Post/GetAllPosts")
   Future<List<ShowPost>> getAllPosts(

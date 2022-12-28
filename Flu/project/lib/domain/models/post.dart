@@ -32,9 +32,9 @@ class ShowPostModel {
   final String created;
   final String name;
   List<String>? attaches;
-  final int totalLikes;
-  final bool likedByMe;
-  late final int totalComments;
+  late int totalLikes;
+  late bool likedByMe;
+  late int totalComments;
 
   ShowPostModel({
     required this.id,

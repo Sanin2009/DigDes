@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:project/domain/models/comment.dart';
 import 'package:project/domain/models/create_user_model.dart';
+import 'package:project/domain/models/dynamic_post_data.dart';
 import 'package:project/domain/models/post.dart';
 
 import '../../domain/models/refresh_token_request.dart';
@@ -65,5 +66,10 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future addComment(String postId, String message) async {
     await _api.addComment(postId, message);
+  }
+
+  @override
+  Future<DynamicPostData> getDynamicPostData(String postId) async {
+    return await _api.getDynamicPostData(postId);
   }
 }

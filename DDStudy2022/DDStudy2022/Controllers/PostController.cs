@@ -108,6 +108,14 @@ namespace Api.Controllers
             return await _postService.GetFeed(userId);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<DynamicPostDataModel> GetDynamicPostData(Guid postId)
+        {
+            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            return await _postService.GetDynamicPostData(postId, userId);
+        }
+
         [HttpPut]
         [Authorize]
         public async Task<bool> UpdateLike(Guid postId)

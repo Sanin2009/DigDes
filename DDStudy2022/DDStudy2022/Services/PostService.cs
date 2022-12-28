@@ -12,6 +12,7 @@ using DAL.Entities;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -122,6 +123,14 @@ namespace Api.Services
             int comments = _context.Comments.Where(x => x.UserPostId == post.Id).Count();
             var result = new ShowPostModel(post.Id, post.UserId, post.Created, post.Name, attachLinks, likes, isLiked, comments);
             return result;
+        }
+
+        public async Task<DynamicPostDataModel> GetDynamicPostData (Guid postId, Guid userId)
+        {
+            var isLiked = await _context.PostLikes.AnyAsync(x => x.UserPostId == postId && x.UserId == userId);
+            int likes = _context.PostLikes.Where(x => x.UserPostId == postId).Count();
+            int comments = _context.Comments.Where(x => x.UserPostId == postId).Count();
+            return new DynamicPostDataModel(likes, isLiked, comments);
         }
 
         public async Task<bool> UpdateLike(Guid postId, Guid userId)

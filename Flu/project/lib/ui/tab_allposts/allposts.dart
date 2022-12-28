@@ -46,9 +46,24 @@ class AllPostsViewModel extends ChangeNotifier {
   }
 
   void changeValues(String postId) async {
-    //TODO Отвратительный костыль, как мне не стыдно, надеюсь я его исправлю, но это надо делать и тестить БД на фронте
-    newPosts = await _api.getAllPosts(0, take + skip);
-    posts = newPosts;
+    var postdata = await _api.getDynamicPostData(postId);
+    List<ShowPost>? tempPosts;
+    for (int i = 0; i < posts!.length; i++) {
+      if (posts![i].showPostModel.id != postId) {
+        if (tempPosts == null) {
+          tempPosts = <ShowPost>[posts![i]];
+        } else {
+          tempPosts.add(posts![i]);
+        }
+      } else {
+        List<ShowPost>? tempPost = <ShowPost>[posts![i]];
+        tempPost[0].showPostModel.likedByMe = postdata.likedByMe;
+        tempPost[0].showPostModel.totalComments = postdata.totalComments;
+        tempPost[0].showPostModel.totalLikes = postdata.totalLikes;
+        tempPosts!.add(tempPost[0]);
+      }
+    }
+    posts = tempPosts;
   }
 
   void toPostDetail(ShowPost post) {
