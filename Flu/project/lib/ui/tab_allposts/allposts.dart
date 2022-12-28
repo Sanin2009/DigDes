@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
@@ -14,7 +13,7 @@ import '../navigation/app_navigator.dart';
 import '../navigation/tab_navigator.dart';
 
 class AllPostsViewModel extends ChangeNotifier {
-  BuildContext context;
+  final BuildContext context;
   final _authService = AuthService();
   final _api = RepositoryModule.apiRepository();
 
@@ -25,6 +24,13 @@ class AllPostsViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   set isLoading(bool val) {
     _isLoading = val;
+    notifyListeners();
+  }
+
+  bool _isEnd = false;
+  bool get isEnd => _isEnd;
+  set isEnd(bool val) {
+    _isEnd = val;
     notifyListeners();
   }
 
@@ -39,9 +45,14 @@ class AllPostsViewModel extends ChangeNotifier {
     asyncInit();
   }
 
+  void changeValues(String postId) {
+    //TODO ?
+  }
+
   void toPostDetail(ShowPost post) {
     Navigator.of(context)
-        .pushNamed(TabNavigatorRoutes.postDetails, arguments: post);
+        .pushNamed(TabNavigatorRoutes.postDetails, arguments: post)
+        .then((value) => changeValues(post.showPostModel.id));
   }
 
   User? _user;
@@ -82,7 +93,10 @@ class AllPostsViewModel extends ChangeNotifier {
     newPosts = await _api.getAllPosts(skip, take);
     skip += 10;
     take += 10;
-    if (newPosts == null || newPosts!.isEmpty) return;
+    if (newPosts == null || newPosts!.isEmpty) {
+      isEnd = true;
+      return;
+    }
     posts = <ShowPost>[...posts!, ...newPosts!];
     isLoading = false;
   }
@@ -255,7 +269,8 @@ class _AllPostsState extends State<AllPosts> {
                           child: Icon(Icons.h_plus_mobiledata),
                         ),
                     ]),
-                    if (viewModel.isLoading) const LinearProgressIndicator()
+                    if (viewModel.isLoading && !viewModel.isEnd)
+                      const LinearProgressIndicator()
                   ],
                 )),
     );

@@ -16,8 +16,9 @@ class _ViewModelState {
 }
 
 class _ViewModel extends ChangeNotifier {
-  BuildContext context;
+  final BuildContext context;
   ShowPost post;
+
   var commentTec = TextEditingController();
   final _api = RepositoryModule.apiRepository();
 
@@ -46,13 +47,10 @@ class _ViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addComment() async {
+  Future addComment() async {
     await _api.addComment(post.showPostModel.id, commentTec.text);
-    // post.showPostModel.totalComments++;
     commentTec.text = "";
-    notifyListeners();
     comments = await _api.showComments(post.showPostModel.id);
-    //TODO ???????
   }
 
   void asyncInit() async {
@@ -130,7 +128,8 @@ class PostDetail extends StatelessWidget {
                   ),
                 ],
               ),
-              Text("Comments (${viewModel.post.showPostModel.totalComments}):"),
+              Text(
+                  "Comments (${viewModel.comments?.length ?? viewModel.post.showPostModel.totalComments}):"),
               SizedBox(
                   height: 200,
                   child: viewModel.comments == null
@@ -174,7 +173,7 @@ class PostDetail extends StatelessWidget {
                                             Expanded(
                                                 flex: 2,
                                                 child: Text(
-                                                    "${DateTime.parse(comment.created).day.toString()} of ${Helper.GetMonth(DateTime.parse(comment.created).month.toString())}, ${DateTime.parse(comment.created).hour.toString()}:${DateTime.parse(comment.created).minute.toString()} "))
+                                                    "${DateTime.parse(comment.created).day.toString()} of ${Helper.GetMonth(DateTime.parse(comment.created).month.toString())}, ${DateTime.parse(comment.created).hour.toString()}:${(DateTime.parse(comment.created).minute.toInt() > 9) ? DateTime.parse(comment.created).minute.toString() : "0${DateTime.parse(comment.created).minute}"} "))
                                           ],
                                         ),
                                       ],
