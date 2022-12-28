@@ -45,8 +45,10 @@ class AllPostsViewModel extends ChangeNotifier {
     asyncInit();
   }
 
-  void changeValues(String postId) {
-    //TODO ?
+  void changeValues(String postId) async {
+    //TODO Отвратительный костыль, как мне не стыдно, надеюсь я его исправлю, но это надо делать и тестить БД на фронте
+    newPosts = await _api.getAllPosts(0, take + skip);
+    posts = newPosts;
   }
 
   void toPostDetail(ShowPost post) {
