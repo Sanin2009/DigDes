@@ -29,8 +29,37 @@ class _ViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool? _isLiked;
+  bool? get isLiked => _isLiked;
+  set isLiked(bool? val) {
+    _isLiked = val;
+    notifyListeners();
+  }
+
+  int? _totalLikes;
+  int? get totalLikes => _totalLikes;
+  set totalLikes(int? val) {
+    _totalLikes = val;
+    notifyListeners();
+  }
+
   bool checkFields() {
     return (state.comment?.isNotEmpty ?? false);
+  }
+
+  void updateLike(String postId) async {
+    await _api.updateLike(postId);
+    if (isLiked ?? false) {
+      isLiked = false;
+      int t = totalLikes ?? 1;
+      t--;
+      totalLikes = t;
+    } else {
+      isLiked = true;
+      int t = totalLikes ?? 0;
+      t++;
+      totalLikes = t;
+    }
   }
 
   _ViewModel({required this.context, required this.post}) {
@@ -54,6 +83,8 @@ class _ViewModel extends ChangeNotifier {
   }
 
   void asyncInit() async {
+    isLiked = post.showPostModel.likedByMe;
+    totalLikes = post.showPostModel.totalLikes;
     comments = await _api.showComments(post.showPostModel.id);
   }
 }
@@ -122,9 +153,14 @@ class PostDetail extends StatelessWidget {
               Row(
                 children: [
                   TextButton.icon(
-                    icon: const Icon(Icons.thumb_up),
-                    label: Text("${viewModel.post.showPostModel.totalLikes}"),
-                    onPressed: () {},
+                    icon: Icon(Icons.thumb_up,
+                        color: (viewModel.isLiked ?? false
+                            ? Colors.black
+                            : Colors.green)),
+                    label: Text("${viewModel.totalLikes}"),
+                    onPressed: () {
+                      viewModel.updateLike(viewModel.post.showPostModel.id);
+                    },
                   ),
                 ],
               ),

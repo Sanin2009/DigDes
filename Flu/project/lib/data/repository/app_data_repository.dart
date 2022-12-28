@@ -72,4 +72,9 @@ class ApiDataRepository extends ApiRepository {
   Future<DynamicPostData> getDynamicPostData(String postId) async {
     return await _api.getDynamicPostData(postId);
   }
+
+  @override
+  Future updateLike(String postId) async {
+    await _api.updateLike(postId);
+  }
 }

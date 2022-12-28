@@ -31,6 +31,9 @@ abstract class ApiClient {
   @POST("/api/Post/ShowComments")
   Future<List<ShowCommentModel>> showComments(@Query("postId") String postId);
 
+  @PUT("/api/Post/UpdateLike")
+  Future updateLike(@Query("postId") String postId);
+
   @POST("/api/Post/CreatePost")
   Future createPost(@Body() CreatePostModel createPostModel);
 

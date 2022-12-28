@@ -133,7 +133,7 @@ namespace Api.Services
             return new DynamicPostDataModel(likes, isLiked, comments);
         }
 
-        public async Task<bool> UpdateLike(Guid postId, Guid userId)
+        public async Task UpdateLike(Guid postId, Guid userId)
         {
             var isLiked = await _context.PostLikes.FirstOrDefaultAsync(x => x.UserPostId == postId && x.UserId == userId);
             if (isLiked==null)
@@ -144,13 +144,11 @@ namespace Api.Services
                     UserPostId = postId
                 });
                 await _context.SaveChangesAsync();
-                return true;
             }
             else 
             {
                 _context.PostLikes.Remove(isLiked);
                 await _context.SaveChangesAsync();
-                return false;
             }
         }
         public async Task<ShowFullPostModel> GetFullPost(Guid postId, Guid userId)

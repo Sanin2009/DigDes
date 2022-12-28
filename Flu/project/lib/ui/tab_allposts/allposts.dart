@@ -60,7 +60,11 @@ class AllPostsViewModel extends ChangeNotifier {
         tempPost[0].showPostModel.likedByMe = postdata.likedByMe;
         tempPost[0].showPostModel.totalComments = postdata.totalComments;
         tempPost[0].showPostModel.totalLikes = postdata.totalLikes;
-        tempPosts!.add(tempPost[0]);
+        if (tempPosts == null) {
+          tempPosts = <ShowPost>[posts![i]];
+        } else {
+          tempPosts.add(tempPost[0]);
+        }
       }
     }
     posts = tempPosts;
@@ -116,6 +120,11 @@ class AllPostsViewModel extends ChangeNotifier {
     }
     posts = <ShowPost>[...posts!, ...newPosts!];
     isLoading = false;
+  }
+
+  void updateLike(String postId) async {
+    await _api.updateLike(postId);
+    changeValues(postId);
   }
 
   void refresh() async {
@@ -243,10 +252,16 @@ class _AllPostsState extends State<AllPosts> {
                                 Row(
                                   children: [
                                     TextButton.icon(
-                                      icon: const Icon(Icons.thumb_up),
+                                      icon: Icon(Icons.thumb_up,
+                                          color: (post.showPostModel.likedByMe
+                                              ? Colors.black
+                                              : Colors.green)),
                                       label: Text(
                                           "${post.showPostModel.totalLikes}"),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        viewModel
+                                            .updateLike(post.showPostModel.id);
+                                      },
                                     ),
                                     const Spacer(),
                                     TextButton.icon(

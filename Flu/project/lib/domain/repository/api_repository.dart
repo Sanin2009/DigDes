@@ -17,6 +17,7 @@ abstract class ApiRepository {
   Future addComment(String postId, String message);
   Future<List<ShowPost>> getAllPosts(int skip, int take);
   Future<List<ShowCommentModel>> showComments(String postId);
+  Future updateLike(String postId);
   Future<List<Metadatum>> uploadTemp({required List<File> files});
   Future addAvatarToUser(Metadatum model);
   Future createUser(CreateUserModel createUserModel);

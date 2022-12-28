@@ -102,10 +102,10 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<List<ShowScrollPostModel>> GetFeed()
+        public async Task<List<ShowScrollPostModel>> GetFeed(int skip = 0, int take = 10)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            return await _postService.GetFeed(userId);
+            return await _postService.GetFeed(userId, skip, take);
         }
 
         [HttpGet]
@@ -118,10 +118,10 @@ namespace Api.Controllers
 
         [HttpPut]
         [Authorize]
-        public async Task<bool> UpdateLike(Guid postId)
+        public async Task UpdateLike(Guid postId)
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
-            return await _postService.UpdateLike(postId, userId);
+            await _postService.UpdateLike(postId, userId);
         }
 
         [HttpPut]
