@@ -59,6 +59,16 @@ class Profile extends StatelessWidget {
                     ),
                   ],
                 ),
+                Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      u.name,
+                      style: TextStyle(fontSize: 25),
+                    )),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(u.status ?? " ", style: TextStyle(fontSize: 20)),
+                ),
                 Row(
                   children: [
                     const Spacer(),
@@ -101,13 +111,10 @@ class Profile extends StatelessWidget {
                   ],
                 ),
                 Text("Account: ${u.isOpen ? "Open" : "Private"}"),
-                Text("Name: ${u.name}"),
                 Text(
                     "Birthday: ${DateTime.parse(u.birthDay).day} of ${Helper.GetMonth(DateTime.parse(u.birthDay).month.toString())} ${DateTime.parse(u.birthDay).year}"),
                 Text(
                     "Last online: ${DateTime.now().day} of ${Helper.GetMonth(DateTime.now().month.toString())} at ${DateTime.now().hour}:${(DateTime.now().minute > 9) ? DateTime.now().minute : "0${DateTime.now().minute}"}"),
-                Text("Login: ${u.email}"),
-                Text("Status: ${u.status ?? "no status"}"),
                 Text("Total Posts: ${u.totalPosts}"),
                 Text("Total Comments: ${u.totalComments}"),
                 Row(
@@ -140,7 +147,17 @@ class Profile extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(color: Colors.blue)))),
                 ),
-                const Text("Your posts:"),
+                Card(
+                  child: TextButton(
+                      onPressed: () {
+                        // TODO AppNavigator.toCreatePost();
+                      },
+                      child: const Align(
+                          alignment: Alignment.center,
+                          child: Text("Show posts",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: Colors.blue)))),
+                )
               ],
             )
           : null,

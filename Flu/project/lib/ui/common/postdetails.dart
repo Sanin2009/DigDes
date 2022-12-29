@@ -130,7 +130,7 @@ class PostDetail extends StatelessWidget {
                 ],
               ),
               SizedBox(
-                height: (viewModel.post.showPostModel.attaches!.length == 0)
+                height: (viewModel.post.showPostModel.attaches!.isEmpty)
                     ? 20
                     : size.width,
                 child: PageView.builder(
@@ -167,7 +167,7 @@ class PostDetail extends StatelessWidget {
               Text(
                   "Comments (${viewModel.comments?.length ?? viewModel.post.showPostModel.totalComments}):"),
               SizedBox(
-                  height: 200,
+                  height: ((viewModel.comments?.length ?? 0) > 2) ? 200 : 75,
                   child: viewModel.comments == null
                       ? const Center(child: CircularProgressIndicator())
                       : Column(
@@ -184,7 +184,7 @@ class PostDetail extends StatelessWidget {
                                   var comment = comments[listIndex];
                                   res = Container(
                                     padding: const EdgeInsets.all(10),
-                                    height: 100,
+                                    height: 75,
                                     color: Colors.white,
                                     child: Column(
                                       children: [

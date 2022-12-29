@@ -113,7 +113,6 @@ class AllPostsViewModel extends ChangeNotifier {
     isLoading = true;
     newPosts = await _api.getAllPosts(skip, take);
     skip += 10;
-    take += 10;
     if (newPosts == null || newPosts!.isEmpty) {
       isEnd = true;
       return;
