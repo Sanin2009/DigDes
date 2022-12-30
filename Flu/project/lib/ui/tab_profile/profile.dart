@@ -63,11 +63,12 @@ class Profile extends StatelessWidget {
                     alignment: Alignment.center,
                     child: Text(
                       u.name,
-                      style: TextStyle(fontSize: 25),
+                      style: const TextStyle(fontSize: 25),
                     )),
                 Align(
                   alignment: Alignment.center,
-                  child: Text(u.status ?? " ", style: TextStyle(fontSize: 20)),
+                  child: Text(u.status ?? " ",
+                      style: const TextStyle(fontSize: 20)),
                 ),
                 Row(
                   children: [

@@ -3,7 +3,9 @@ import 'package:project/domain/models/comment.dart';
 import 'package:project/domain/models/post.dart';
 import 'package:provider/provider.dart';
 
+import '../../domain/models/user.dart';
 import '../../internal/config/app_config.dart';
+import '../../internal/config/shared_prefs.dart';
 import '../../internal/dependencies/repository_module.dart';
 import 'helper.dart';
 
@@ -26,6 +28,13 @@ class _ViewModel extends ChangeNotifier {
   _ViewModelState get state => _state;
   set state(_ViewModelState val) {
     _state = val;
+    notifyListeners();
+  }
+
+  User? _user;
+  User? get user => _user;
+  set user(User? val) {
+    _user = val;
     notifyListeners();
   }
 
@@ -83,6 +92,7 @@ class _ViewModel extends ChangeNotifier {
   }
 
   void asyncInit() async {
+    user = await SharedPrefs.getStoredUser();
     isLiked = post.showPostModel.likedByMe;
     totalLikes = post.showPostModel.totalLikes;
     comments = await _api.showComments(post.showPostModel.id);
@@ -206,6 +216,19 @@ class PostDetail extends StatelessWidget {
                                               child: Text(
                                                   "${comment.name}: ${comment.message}"),
                                             ),
+                                            if ((viewModel.user?.id) ==
+                                                    viewModel
+                                                        .post.userModel.id ||
+                                                (viewModel.user?.name) ==
+                                                    comment.name)
+                                              Expanded(
+                                                flex: 1,
+                                                child: IconButton(
+                                                  icon:
+                                                      const Icon(Icons.delete),
+                                                  onPressed: () {},
+                                                ),
+                                              ),
                                             Expanded(
                                                 flex: 2,
                                                 child: Text(
