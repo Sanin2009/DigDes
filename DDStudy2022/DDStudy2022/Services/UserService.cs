@@ -142,11 +142,23 @@ namespace Api.Services
             return result;
         }
 
-        public async Task<List<Guid>> GetSubRequests(Guid userId)
+        public async Task<List<UserModel>> GetSubRequests(Guid userId)
         {
-            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed==false)).Select(x => x.SubscriberId).ToListAsync();
-            if (subs.IsNullOrEmpty()) return new List<Guid>();
-            else return subs;
+            // и тут тоже
+            var subs = _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed==false)).Join(_context.Users, s => s.SubscriberId, u => u.Id, (s, u) => new UserModel
+            {
+                Id = u.Id,
+                Name = u.Name,
+                AvatarLink = LinkHelper.Avatar(u.Id),
+                LastActive = u.LastActive,
+                Status = u.Status,
+            });
+            var result = new List<UserModel>();
+            foreach (var sub in subs)
+            {
+                result.Add(sub);
+            }
+            return result;
         }
         public async Task<int> GetUsersTotalSubs(Guid userId)
         {

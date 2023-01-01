@@ -64,7 +64,7 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<List<Guid>> GetSubRequests()
+        public async Task<List<UserModel>> GetSubRequests()
         {
             var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _userService.GetSubRequests(userId);
