@@ -116,18 +116,30 @@ namespace Api.Services
             return user;
         }
 
-        public async Task<List<Guid>> GetSubscriptions(Guid subscriberId)
+        public async Task<List<UserModel>> GetSubscriptions(Guid subscriberId)
         {
-            var subs = await _context.Subscribers.Where(x => (x.SubscriberId == subscriberId) && (x.IsSubscribed)).Select(x=>x.UserId).ToListAsync();
-            if (subs.IsNullOrEmpty()) return new List<Guid>();
+            var subs = await _context.Subscribers.Where(x => (x.SubscriberId == subscriberId) && (x.IsSubscribed)).Include(x=>x.Users).Select(x=>x.Users).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            if (subs.IsNullOrEmpty()) return new List<UserModel>();
             else return subs;
         }
 
-        public async Task<List<Guid>> GetSubscribers(Guid userId)
+        public async Task<List<UserModel>> GetSubscribers(Guid userId)
         {
-            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed)).Select(x => x.SubscriberId).ToListAsync();
-            if (subs.IsNullOrEmpty()) return new List<Guid>();
-            else return subs;
+            // было бы неплохо знать как сделать это асинхронно
+            var subs = _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed)).Join(_context.Users, s => s.SubscriberId, u => u.Id, (s, u) => new UserModel
+            {
+                Id = u.Id,
+                Name = u.Name,
+                AvatarLink = LinkHelper.Avatar(u.Id),
+                LastActive = u.LastActive,
+                Status = u.Status,
+            });
+            var result = new List<UserModel>();
+            foreach (var sub in subs)
+            {
+                result.Add(sub);
+            }
+            return result;
         }
 
         public async Task<List<Guid>> GetSubRequests(Guid userId)
