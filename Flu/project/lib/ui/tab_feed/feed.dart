@@ -230,7 +230,7 @@ class PageIndicator extends StatelessWidget {
       widgets.add(
         Icon(
           Icons.circle,
-          size: i == (current ?? 0) ? width * 1.4 : width,
+          size: i == (current ?? 0) ? width * 1.5 : width,
         ),
       );
     }

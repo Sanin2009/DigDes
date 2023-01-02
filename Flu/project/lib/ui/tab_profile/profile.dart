@@ -151,7 +151,7 @@ class Profile extends StatelessWidget {
                 Card(
                   child: TextButton(
                       onPressed: () {
-                        // TODO AppNavigator.toCreatePost();
+                        // TODO AppNavigator.toShowUserPosts();
                       },
                       child: const Align(
                           alignment: Alignment.center,

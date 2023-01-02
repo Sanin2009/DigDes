@@ -32,16 +32,23 @@ class BottomTabs extends StatelessWidget {
     var color = isCurrent ? Colors.grey[600] : Colors.grey[400];
     Widget icon = Icon(
       TabEnums.tabIcon[tabItem],
+      size: isCurrent ? 26 : 22,
       color: color,
     );
     if (tabItem == TabItemEnum.profile) {
       icon = CircleAvatar(
-        maxRadius: isCurrent ? 12 : 10,
+        maxRadius: isCurrent ? 14 : 10,
         backgroundImage: appmodel.avatar?.image,
       );
     }
+    String itemLabel = "";
+    if (tabItem == TabItemEnum.profile) itemLabel = "Profile";
+    if (tabItem == TabItemEnum.allPosts) itemLabel = "Posts";
+    if (tabItem == TabItemEnum.feed) itemLabel = "Feed";
+    if (tabItem == TabItemEnum.searchUser) itemLabel = "User search";
+    if (tabItem == TabItemEnum.searchPost) itemLabel = "Post search";
     return BottomNavigationBarItem(
-        label: "",
+        label: itemLabel,
         backgroundColor: isCurrent ? Colors.grey : Colors.transparent,
         icon: icon);
   }

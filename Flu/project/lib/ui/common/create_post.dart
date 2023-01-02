@@ -41,6 +41,13 @@ class _ViewModel extends ChangeNotifier {
   final _api = RepositoryModule.apiRepository();
   String? _imagePath;
 
+  var _state = const _ViewModelState();
+  _ViewModelState get state => _state;
+  set state(_ViewModelState val) {
+    _state = val;
+    notifyListeners();
+  }
+
   BuildContext context;
   _ViewModel({required this.context}) {
     titleTec.addListener(() {
@@ -51,14 +58,6 @@ class _ViewModel extends ChangeNotifier {
     });
   }
 
-  var _state = const _ViewModelState();
-  _ViewModelState get state => _state;
-  set state(_ViewModelState val) {
-    _state = val;
-    notifyListeners();
-  }
-
-  // ToDo 80%
   void createPost() async {
     state = state.copyWith(isLoading: true);
     var newPost = CreatePostModel(
@@ -126,13 +125,16 @@ class CreatePost extends StatelessWidget {
                   decoration: const InputDecoration(
                       hintText: "Insert tags separated by spaces"),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.photo_camera_back),
-                  onPressed: () {
-                    viewModel.addPhoto();
-                  },
-                ),
+                if (viewModel.postImages.length < 5)
+                  IconButton(
+                    icon: const Icon(Icons.photo_camera_back),
+                    onPressed: () {
+                      viewModel.addPhoto();
+                    },
+                  ),
                 Text("Images attached:${viewModel.postImages.length}"),
+                if (viewModel.postImages.length >= 5)
+                  const Text("Limit of images reached"),
                 ElevatedButton(
                     onPressed: viewModel.createPost,
                     child: const Text("Create Post")),
