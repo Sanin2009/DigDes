@@ -14,6 +14,7 @@ abstract class ApiRepository {
   Future<TokenResponse?> refreshToken(String refreshToken);
   Future<User?> getUser();
   Future<User?> getUserById(String userId);
+  Future<User?> getUserByName(String name);
   Future<DynamicPostData> getDynamicPostData(String postId);
   Future addComment(String postId, String message);
   Future<List<ShowPost>> getAllPosts(int skip, int take);

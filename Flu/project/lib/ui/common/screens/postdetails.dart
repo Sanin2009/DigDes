@@ -102,6 +102,11 @@ class _ViewModel extends ChangeNotifier {
     if (newuser != null) toUserProfileNavigation(newuser);
   }
 
+  void toUserProfileByName(String name) async {
+    var newuser = await _api.getUserByName(name);
+    if (newuser != null) toUserProfileNavigation(newuser);
+  }
+
   void toUserProfileNavigation(User user) {
     Navigator.of(context)
         .pushNamed(TabNavigatorRoutes.userProfile, arguments: user);
@@ -234,7 +239,8 @@ class PostDetail extends StatelessWidget {
                                                 ),
                                               ),
                                               onTap: () {
-                                                // TODO: API userByName viewModel.toUserProfile(comment.name)
+                                                viewModel.toUserProfileByName(
+                                                    comment.name);
                                               },
                                             ),
                                             Expanded(

@@ -20,6 +20,9 @@ abstract class ApiClient {
   @GET("/api/User/GetUserById")
   Future<User?> getUserById(@Query("userId") String userId);
 
+  @GET("/api/User/GetUserByName")
+  Future<User?> getUserByName(@Query("name") String name);
+
   @GET("/api/Post/GetDynamicPostData")
   Future<DynamicPostData> getDynamicPostData(@Query("postId") String postId);
 

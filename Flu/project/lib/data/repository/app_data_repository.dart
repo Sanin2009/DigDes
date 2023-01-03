@@ -92,4 +92,9 @@ class ApiDataRepository extends ApiRepository {
   Future<User?> getUserById(String userId) async {
     return await _api.getUserById(userId);
   }
+
+  @override
+  Future<User?> getUserByName(String name) async {
+    return await _api.getUserByName(name);
+  }
 }

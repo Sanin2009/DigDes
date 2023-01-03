@@ -116,6 +116,17 @@ namespace Api.Services
             return user;
         }
 
+        public async Task<UserModel> GetUserByName(Guid subId, string name)
+        {
+            var user = await _context.Users.Where(x => x.Name.ToLower() == name.ToLower()).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            if (user==null) throw new NotFound("user");
+            //var user = await GetUserById(userid);
+            var sub = await _context.Subscribers.FirstOrDefaultAsync(x => (x.SubscriberId == subId) && (x.UserId == user[0].Id));
+            bool? isSub = sub?.IsSubscribed;
+            user[0].isSub = isSub;
+            return user[0];
+        }
+
         public async Task<List<UserModel>> GetSubscriptions(Guid subscriberId)
         {
             var subs = await _context.Subscribers.Where(x => (x.SubscriberId == subscriberId) && (x.IsSubscribed)).Include(x=>x.Users).Select(x=>x.Users).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
