@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/services/auth_service.dart';
+import '../../domain/enums/tab_item.dart';
 import '../../domain/models/user.dart';
 import '../../internal/config/app_config.dart';
 import '../../internal/config/shared_prefs.dart';
@@ -19,7 +20,15 @@ class ProfileViewModel extends ChangeNotifier {
   final _authService = AuthService();
   final BuildContext context;
   ProfileViewModel({required this.context}) {
-    asyncInit();
+    //asyncInit();
+    var appModel = context.read<AppViewModel>();
+    appModel.addListener(
+      () {
+        if (appModel.currentTab == TabItemEnum.profile) {
+          asyncInit();
+        }
+      },
+    );
   }
   User? _user;
   User? get user => _user;
@@ -31,7 +40,9 @@ class ProfileViewModel extends ChangeNotifier {
   Map<String, String>? headers;
 
   Future asyncInit() async {
-    user = await SharedPrefs.getStoredUser();
+    user = await _api.getUser();
+    SharedPrefs.setStoredUser(user);
+    //user = await SharedPrefs.getStoredUser();
     var token = await TokenStorage.getAccessToken();
     headers = {"Authorization": "Bearer $token"};
     var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))

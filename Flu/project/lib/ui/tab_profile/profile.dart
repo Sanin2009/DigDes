@@ -115,7 +115,7 @@ class Profile extends StatelessWidget {
                 Text(
                     "Birthday: ${DateTime.parse(u.birthDay).day} of ${Helper.GetMonth(DateTime.parse(u.birthDay).month.toString())} ${DateTime.parse(u.birthDay).year}"),
                 Text(
-                    "Last online: ${DateTime.now().day} of ${Helper.GetMonth(DateTime.now().month.toString())} at ${DateTime.now().hour}:${(DateTime.now().minute > 9) ? DateTime.now().minute : "0${DateTime.now().minute}"}"),
+                    "Last online: ${DateTime.parse(u.lastActive).day} of ${Helper.GetMonth(DateTime.parse(u.lastActive).month.toString())} at ${DateTime.parse(u.lastActive).hour}:${(DateTime.parse(u.lastActive).minute > 9) ? DateTime.parse(u.lastActive).minute : "0${DateTime.parse(u.lastActive).minute}"}"),
                 Text("Total Posts: ${u.totalPosts}"),
                 Text("Total Comments: ${u.totalComments}"),
                 Row(
@@ -151,7 +151,7 @@ class Profile extends StatelessWidget {
                 Card(
                   child: TextButton(
                       onPressed: () {
-                        // TODO AppNavigator.toShowUserPosts();
+                        // TODO AppNavigator.toShowUserPosts(userId);
                       },
                       child: const Align(
                           alignment: Alignment.center,
