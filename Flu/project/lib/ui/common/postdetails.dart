@@ -91,6 +91,11 @@ class _ViewModel extends ChangeNotifier {
     comments = await _api.showComments(post.showPostModel.id);
   }
 
+  Future deleteComment(String commentId) async {
+    await _api.deleteComment(commentId);
+    comments = await _api.showComments(post.showPostModel.id);
+  }
+
   void asyncInit() async {
     user = await SharedPrefs.getStoredUser();
     isLiked = post.showPostModel.likedByMe;
@@ -226,7 +231,10 @@ class PostDetail extends StatelessWidget {
                                                 child: IconButton(
                                                   icon:
                                                       const Icon(Icons.delete),
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    viewModel.deleteComment(
+                                                        comment.id);
+                                                  },
                                                 ),
                                               ),
                                             Expanded(

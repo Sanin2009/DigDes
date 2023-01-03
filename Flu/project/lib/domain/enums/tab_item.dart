@@ -19,6 +19,14 @@ class TabEnums {
     TabItemEnum.profile: Icons.person_outline,
   };
 
+  static Map<TabItemEnum, String> tabLabel = {
+    TabItemEnum.feed: "Feed",
+    TabItemEnum.searchUser: "User search",
+    TabItemEnum.allPosts: "All posts",
+    TabItemEnum.searchPost: "Post search",
+    TabItemEnum.profile: "Profile",
+  };
+
   static Map<TabItemEnum, Widget> tabRoots = {
     TabItemEnum.feed: Feed.create(),
     TabItemEnum.profile: Profile.create(),

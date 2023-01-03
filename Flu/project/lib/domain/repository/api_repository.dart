@@ -22,4 +22,5 @@ abstract class ApiRepository {
   Future addAvatarToUser(Metadatum model);
   Future createUser(CreateUserModel createUserModel);
   Future createPost(CreatePostModel createPostModel);
+  Future deleteComment(String commentId);
 }

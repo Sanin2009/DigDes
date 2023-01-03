@@ -73,7 +73,8 @@ namespace Api.Services
             var comment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == commentId);
             if (comment == null) throw new NoAccess();
             var post = await _context.UserPosts.FirstOrDefaultAsync(x => x.Id == comment.UserPostId);
-            if ((comment.UserPostId!=userId) && (comment.UserId!=userId)) throw new NoAccess();
+            if (post == null) throw new NoAccess();
+            if ((post.UserId!=userId) && (comment.UserId!=userId)) throw new NoAccess();
             _context.Remove(comment);
             await _context.SaveChangesAsync();
         }
@@ -248,6 +249,10 @@ namespace Api.Services
             if (user.IsNullOrEmpty())
                 throw new NotFound("user");
             return user[0];
+        }
+        public void Dispose()
+        {
+            _context.Dispose();
         }
 
     }

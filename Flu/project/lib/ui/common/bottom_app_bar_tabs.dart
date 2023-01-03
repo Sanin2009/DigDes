@@ -41,14 +41,8 @@ class BottomTabs extends StatelessWidget {
         backgroundImage: appmodel.avatar?.image,
       );
     }
-    String itemLabel = "";
-    if (tabItem == TabItemEnum.profile) itemLabel = "Profile";
-    if (tabItem == TabItemEnum.allPosts) itemLabel = "Posts";
-    if (tabItem == TabItemEnum.feed) itemLabel = "Feed";
-    if (tabItem == TabItemEnum.searchUser) itemLabel = "User search";
-    if (tabItem == TabItemEnum.searchPost) itemLabel = "Post search";
     return BottomNavigationBarItem(
-        label: itemLabel,
+        label: TabEnums.tabLabel[tabItem],
         backgroundColor: isCurrent ? Colors.grey : Colors.transparent,
         icon: icon);
   }

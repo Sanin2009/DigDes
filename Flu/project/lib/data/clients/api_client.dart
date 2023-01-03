@@ -34,6 +34,9 @@ abstract class ApiClient {
   @PUT("/api/Post/UpdateLike")
   Future updateLike(@Query("postId") String postId);
 
+  @DELETE("/api/Post/DeleteComment")
+  Future deleteComment(@Query("commentId") String commentId);
+
   @POST("/api/Post/CreatePost")
   Future createPost(@Body() CreatePostModel createPostModel);
 
