@@ -37,6 +37,9 @@ abstract class ApiClient {
   @DELETE("/api/Post/DeleteComment")
   Future deleteComment(@Query("commentId") String commentId);
 
+  @DELETE("/api/Post/DeletePost")
+  Future deletePost(@Query("postId") String postId);
+
   @POST("/api/Post/CreatePost")
   Future createPost(@Body() CreatePostModel createPostModel);
 

@@ -7,7 +7,7 @@ import '../../internal/config/app_config.dart';
 import '../../internal/config/shared_prefs.dart';
 import '../../internal/config/token_storage.dart';
 import '../../internal/dependencies/repository_module.dart';
-import '../common/helper.dart';
+import 'helper.dart';
 import '../navigation/tab_navigator.dart';
 
 class UpdateNotifierModel extends ChangeNotifier {
@@ -88,6 +88,21 @@ class ViewPostsViewModel extends ChangeNotifier {
     changeValues(postId);
   }
 
+  void deletePost(String postId) async {
+    await _api.deletePost(postId);
+    List<ShowPost>? tempPosts;
+    for (int i = 0; i < posts!.length; i++) {
+      if (posts![i].showPostModel.id != postId) {
+        if (tempPosts == null) {
+          tempPosts = <ShowPost>[posts![i]];
+        } else {
+          tempPosts.add(posts![i]);
+        }
+      }
+    }
+    posts = tempPosts;
+  }
+
   void asyncInit() async {
     user = await SharedPrefs.getStoredUser();
     var token = await TokenStorage.getAccessToken();
@@ -160,6 +175,35 @@ class PostsViewModel extends StatelessWidget {
                       child: Text(
                           "${post.userModel.name}: ${post.showPostModel.name}"),
                     ),
+                    if (post.userModel.id == viewModel.user?.id)
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                        title: const Text("Deleting Post"),
+                                        content: const Text(
+                                            "Are you sure you want to delete your post?"),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                viewModel.deletePost(
+                                                    post.showPostModel.id);
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text("Yes")),
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: const Text("No")),
+                                        ]));
+                          },
+                        ),
+                      ),
                     Expanded(
                         flex: 2,
                         child: Text(

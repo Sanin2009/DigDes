@@ -82,4 +82,9 @@ class ApiDataRepository extends ApiRepository {
   Future deleteComment(String commentId) async {
     await _api.deleteComment(commentId);
   }
+
+  @override
+  Future deletePost(String postId) async {
+    await _api.deletePost(postId);
+  }
 }

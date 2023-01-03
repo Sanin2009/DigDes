@@ -23,4 +23,5 @@ abstract class ApiRepository {
   Future createUser(CreateUserModel createUserModel);
   Future createPost(CreatePostModel createPostModel);
   Future deleteComment(String commentId);
+  Future deletePost(String postId);
 }
