@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../domain/models/user.dart';
 import '../../../internal/config/app_config.dart';
 import '../../navigation/app_navigator.dart';
+import '../../navigation/tab_navigator.dart';
 import '../helper.dart';
 
 class UserProfileWidget extends StatelessWidget {
@@ -119,7 +120,8 @@ class UserProfileWidget extends StatelessWidget {
         Card(
           child: TextButton(
               onPressed: () {
-                // TODO AppNavigator.toShowUserPosts(userId);
+                Navigator.of(context)
+                    .pushNamed(TabNavigatorRoutes.userPosts, arguments: u.id);
               },
               child: const Align(
                   alignment: Alignment.center,

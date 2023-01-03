@@ -142,6 +142,39 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  Future<List<ShowPost>> getUsersPosts(
+    userid,
+    skip,
+    take,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'userId': userid,
+      r'skip': skip,
+      r'take': take,
+    };
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<ShowPost>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/Post/GetUsersPosts',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    var value = _result.data!
+        .map((dynamic i) => ShowPost.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
   Future<dynamic> addComment(
     postId,
     message,

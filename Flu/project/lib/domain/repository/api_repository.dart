@@ -18,6 +18,7 @@ abstract class ApiRepository {
   Future<DynamicPostData> getDynamicPostData(String postId);
   Future addComment(String postId, String message);
   Future<List<ShowPost>> getAllPosts(int skip, int take);
+  Future<List<ShowPost>> getUsersPosts(String userid, int skip, int take);
   Future<List<ShowCommentModel>> showComments(String postId);
   Future updateLike(String postId);
   Future<List<Metadatum>> uploadTemp({required List<File> files});
