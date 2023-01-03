@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/common/user_profile_widget.dart';
+import 'package:project/ui/common/widgets/user_profile_widget.dart';
 import 'package:provider/provider.dart';
 
-import '../common/helper.dart';
 import '../../internal/config/app_config.dart';
 import '../navigation/app_navigator.dart';
 import 'profile_view_model.dart';

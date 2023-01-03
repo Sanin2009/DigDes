@@ -6,7 +6,7 @@ import '../../domain/enums/tab_item.dart';
 import '../../domain/models/user.dart';
 import '../../internal/config/app_config.dart';
 import '../../internal/config/shared_prefs.dart';
-import '../common/bottom_app_bar_tabs.dart';
+import '../common/widgets/bottom_app_bar_tabs.dart';
 import '../navigation/app_navigator.dart';
 import '../navigation/tab_navigator.dart';
 

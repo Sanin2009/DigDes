@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:project/ui/common/screens/user_profile.dart';
 
 import '../../domain/enums/tab_item.dart';
-import '../common/postdetails.dart';
+import '../common/screens/postdetails.dart';
 
 class TabNavigatorRoutes {
   static const String root = '/app/';
   static const String postDetails = "/app/postDetails";
+  static const String userProfile = "/app/userProfile";
 }
 
 class TabNavigator extends StatelessWidget {
@@ -26,6 +28,7 @@ class TabNavigator extends StatelessWidget {
               child: Text(tabItem.name),
             ),
         TabNavigatorRoutes.postDetails: (context) => PostDetail.create(arg),
+        TabNavigatorRoutes.userProfile: (context) => UserProfile.create(arg),
       };
 
   @override

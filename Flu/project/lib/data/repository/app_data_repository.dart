@@ -87,4 +87,9 @@ class ApiDataRepository extends ApiRepository {
   Future deletePost(String postId) async {
     await _api.deletePost(postId);
   }
+
+  @override
+  Future<User?> getUserById(String userId) async {
+    return await _api.getUserById(userId);
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/common/create_post.dart';
+import 'package:project/ui/common/screens/create_post.dart';
 import 'package:project/ui/roots/register.dart';
-import 'package:project/ui/common/settings.dart';
+import 'package:project/ui/common/screens/settings.dart';
 
 import '../../domain/enums/tab_item.dart';
 import '../roots/main_app.dart';

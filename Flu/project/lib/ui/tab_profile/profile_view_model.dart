@@ -12,7 +12,7 @@ import '../../internal/config/shared_prefs.dart';
 import '../../internal/config/token_storage.dart';
 import '../../internal/dependencies/repository_module.dart';
 import '../navigation/app_navigator.dart';
-import '../common/cam_widget.dart';
+import '../common/widgets/cam_widget.dart';
 import '../roots/main_app.dart';
 
 class ProfileViewModel extends ChangeNotifier {
