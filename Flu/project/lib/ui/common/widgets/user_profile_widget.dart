@@ -1,18 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:project/internal/config/shared_prefs.dart';
+import 'package:provider/provider.dart';
 
 import '../../../domain/models/user.dart';
 import '../../../internal/config/app_config.dart';
+import '../../../internal/dependencies/repository_module.dart';
 import '../../navigation/app_navigator.dart';
 import '../../navigation/tab_navigator.dart';
 import '../helper.dart';
 
+class _ViewModel extends ChangeNotifier {
+  final BuildContext context;
+  User u;
+
+  User? _user;
+  User? get user => _user;
+  set user(User? val) {
+    _user = val;
+    notifyListeners();
+  }
+
+  var commentTec = TextEditingController();
+  final _api = RepositoryModule.apiRepository();
+
+  _ViewModel({required this.context, required this.u}) {
+    asyncInit();
+  }
+
+  void asyncInit() async {
+    user = await SharedPrefs.getStoredUser();
+  }
+}
+
 class UserProfileWidget extends StatelessWidget {
-  final User u;
-  final bool isMyProfile;
-  const UserProfileWidget(this.u, this.isMyProfile, {super.key});
+  const UserProfileWidget({super.key});
+
+  static create(Object? arg) {
+    User user;
+    if (arg != null && arg is User) {
+      user = arg;
+    } else {
+      throw Exception();
+    }
+    return ChangeNotifierProvider(
+      create: (BuildContext context) => _ViewModel(context: context, u: user),
+      child: const UserProfileWidget(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    var viewModel = context.watch<_ViewModel>();
     return ListView(
       children: [
         Stack(
@@ -34,7 +72,7 @@ class UserProfileWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 image: DecorationImage(
-                    image: NetworkImage("$baseUrl${u.avatarLink}"),
+                    image: NetworkImage("$baseUrl${viewModel.u.avatarLink}"),
                     fit: BoxFit.cover),
               ),
             ),
@@ -43,12 +81,13 @@ class UserProfileWidget extends StatelessWidget {
         Align(
             alignment: Alignment.center,
             child: Text(
-              u.name,
+              viewModel.u.name,
               style: const TextStyle(fontSize: 25),
             )),
         Align(
           alignment: Alignment.center,
-          child: Text(u.status ?? " ", style: const TextStyle(fontSize: 20)),
+          child: Text(viewModel.u.status ?? " ",
+              style: const TextStyle(fontSize: 20)),
         ),
         Row(
           children: [
@@ -58,7 +97,7 @@ class UserProfileWidget extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    "${u.name}'s subscripitions",
+                    "${viewModel.u.name}'s subscripitions",
                     style: const TextStyle(color: Colors.blue),
                   ),
                 )),
@@ -72,20 +111,20 @@ class UserProfileWidget extends StatelessWidget {
                 onPressed: () {},
                 child: Align(
                   alignment: Alignment.center,
-                  child: Text("Subscribers: ${u.totalSubs}",
+                  child: Text("Subscribers: ${viewModel.u.totalSubs}",
                       style: const TextStyle(color: Colors.blue)),
                 )),
             const Spacer()
           ],
         ),
-        Text("Account: ${u.isOpen ? "Open" : "Private"}"),
+        Text("Account: ${viewModel.u.isOpen ? "Open" : "Private"}"),
         Text(
-            "Birthday: ${DateTime.parse(u.birthDay).day} of ${Helper.GetMonth(DateTime.parse(u.birthDay).month.toString())} ${DateTime.parse(u.birthDay).year}"),
+            "Birthday: ${DateTime.parse(viewModel.u.birthDay).day} of ${Helper.GetMonth(DateTime.parse(viewModel.u.birthDay).month.toString())} ${DateTime.parse(viewModel.u.birthDay).year}"),
         Text(
-            "Last online: ${DateTime.parse(u.lastActive).day} of ${Helper.GetMonth(DateTime.parse(u.lastActive).month.toString())} at ${DateTime.parse(u.lastActive).hour}:${(DateTime.parse(u.lastActive).minute > 9) ? DateTime.parse(u.lastActive).minute : "0${DateTime.parse(u.lastActive).minute}"}"),
-        Text("Total Posts: ${u.totalPosts}"),
-        Text("Total Comments: ${u.totalComments}"),
-        if (isMyProfile)
+            "Last online: ${DateTime.parse(viewModel.u.lastActive).day} of ${Helper.GetMonth(DateTime.parse(viewModel.u.lastActive).month.toString())} at ${DateTime.parse(viewModel.u.lastActive).hour}:${(DateTime.parse(viewModel.u.lastActive).minute > 9) ? DateTime.parse(viewModel.u.lastActive).minute : "0${DateTime.parse(viewModel.u.lastActive).minute}"}"),
+        Text("Total Posts: ${viewModel.u.totalPosts}"),
+        Text("Total Comments: ${viewModel.u.totalComments}"),
+        if (viewModel.u.id == viewModel.user?.id)
           Row(
             children: [
               const Spacer(),
@@ -105,7 +144,32 @@ class UserProfileWidget extends StatelessWidget {
             ],
           ),
         Row(),
-        if (isMyProfile)
+        if ((viewModel.u.id != viewModel.user?.id) &&
+            (viewModel.u.isSub != null))
+          Text(
+            (viewModel.u.isSub ?? false)
+                ? "You are subscribed!"
+                : "Waiting for ${viewModel.u.name} to accept your subscription",
+            textAlign: TextAlign.center,
+          ),
+        if (viewModel.u.id != viewModel.user?.id)
+          Card(
+            child: TextButton(
+                onPressed: () {
+                  //   TODO Subscribe thingy
+                },
+                child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                        viewModel.u.isSub == null ? "Subscribe" : "Unsubscribe",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: (viewModel.u.isSub == null ||
+                                    viewModel.u.isSub == false)
+                                ? Colors.blue
+                                : Colors.red)))),
+          ),
+        if (viewModel.u.id == viewModel.user?.id)
           Card(
             child: TextButton(
                 onPressed: () {
@@ -117,18 +181,21 @@ class UserProfileWidget extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.blue)))),
           ),
-        Card(
-          child: TextButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(TabNavigatorRoutes.userPosts, arguments: u.id);
-              },
-              child: const Align(
-                  alignment: Alignment.center,
-                  child: Text("Show posts",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.blue)))),
-        )
+        if (viewModel.u.isOpen ||
+            (viewModel.u.isSub == true) ||
+            viewModel.u.id == viewModel.user?.id)
+          Card(
+            child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(TabNavigatorRoutes.userPosts,
+                      arguments: viewModel.u.id);
+                },
+                child: const Align(
+                    alignment: Alignment.center,
+                    child: Text("Show posts",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.blue)))),
+          )
       ],
     );
   }

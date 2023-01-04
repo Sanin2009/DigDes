@@ -150,7 +150,7 @@ class _UserPostsState extends State<UserPosts> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       appBar: AppBar(
-        title: const Text("User's Posts"), //TODO include user?
+        title: const Text("User's Posts"),
       ),
       body: Column(
         children: [

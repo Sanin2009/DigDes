@@ -4,26 +4,26 @@ import '../../../domain/models/user.dart';
 import '../widgets/user_profile_widget.dart';
 
 class UserProfile extends StatelessWidget {
-  const UserProfile({super.key, required this.user});
-  final User user;
+  const UserProfile({super.key, required this.userOfProfile});
+  final User userOfProfile;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("User ${user.name}"),
+        title: Text("User ${userOfProfile.name}"),
       ),
-      body: UserProfileWidget(user, false),
+      body: UserProfileWidget.create(userOfProfile),
     );
   }
 
   static create(Object? arg) {
-    User user;
+    User userOfProfile;
     if (arg != null && arg is User) {
-      user = arg;
+      userOfProfile = arg;
     } else {
       throw Exception();
     }
-    return UserProfile(user: user);
+    return UserProfile(userOfProfile: userOfProfile);
   }
 }

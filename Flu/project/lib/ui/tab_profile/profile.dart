@@ -34,7 +34,7 @@ class Profile extends StatelessWidget {
               icon: const Icon(Icons.exit_to_app), onPressed: viewModel.logout),
         ],
       ),
-      body: (u != null) ? UserProfileWidget(u, true) : null,
+      body: (u != null) ? UserProfileWidget.create(u) : null,
     );
   }
 
