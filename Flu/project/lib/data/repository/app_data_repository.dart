@@ -103,4 +103,9 @@ class ApiDataRepository extends ApiRepository {
       String userid, int skip, int take) async {
     return await _api.getUsersPosts(userid, skip, take);
   }
+
+  @override
+  Future<List<ShowPost>> getFeed(int skip, int take) async {
+    return await _api.getFeed(skip, take);
+  }
 }

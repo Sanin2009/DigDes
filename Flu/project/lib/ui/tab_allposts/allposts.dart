@@ -40,31 +40,6 @@ class AllPostsViewModel extends ChangeNotifier {
     asyncInit();
   }
 
-  void changeValues(String postId) async {
-    var postdata = await _api.getDynamicPostData(postId);
-    List<ShowPost>? tempPosts;
-    for (int i = 0; i < posts!.length; i++) {
-      if (posts![i].showPostModel.id != postId) {
-        if (tempPosts == null) {
-          tempPosts = <ShowPost>[posts![i]];
-        } else {
-          tempPosts.add(posts![i]);
-        }
-      } else {
-        List<ShowPost>? tempPost = <ShowPost>[posts![i]];
-        tempPost[0].showPostModel.likedByMe = postdata.likedByMe;
-        tempPost[0].showPostModel.totalComments = postdata.totalComments;
-        tempPost[0].showPostModel.totalLikes = postdata.totalLikes;
-        if (tempPosts == null) {
-          tempPosts = <ShowPost>[posts![i]];
-        } else {
-          tempPosts.add(tempPost[0]);
-        }
-      }
-    }
-    posts = tempPosts;
-  }
-
   User? _user;
   User? get user => _user;
   set user(User? val) {
