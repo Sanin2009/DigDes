@@ -5,6 +5,7 @@ import 'package:project/domain/models/create_user_model.dart';
 import 'package:project/domain/models/dynamic_post_data.dart';
 
 import '../models/post.dart';
+import '../models/settings.dart';
 import '../models/token_response.dart';
 import '../models/user.dart';
 
@@ -29,4 +30,5 @@ abstract class ApiRepository {
   Future createPost(CreatePostModel createPostModel);
   Future deleteComment(String commentId);
   Future deletePost(String postId);
+  Future<bool?> updateSettings(SettingsModel settings);
 }

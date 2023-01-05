@@ -6,6 +6,7 @@ import 'package:project/domain/models/dynamic_post_data.dart';
 import 'package:project/domain/models/post.dart';
 import 'package:retrofit/retrofit.dart';
 
+import '../../domain/models/settings.dart';
 import '../../domain/models/user.dart';
 
 part 'api_client.g.dart';
@@ -66,4 +67,7 @@ abstract class ApiClient {
   @POST("/api/Attach/UploadFiles")
   Future<List<Metadatum>> uploadTemp(
       {@Part(name: "files") required List<File> files});
+
+  @PUT("/api/User/UpdateSettings")
+  Future<bool?> updateSettings(@Body() SettingsModel settings);
 }

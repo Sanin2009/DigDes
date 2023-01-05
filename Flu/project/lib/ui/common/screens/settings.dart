@@ -1,27 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../domain/models/settings.dart';
 import '../../../domain/models/user.dart';
 import '../../../internal/config/shared_prefs.dart';
 import '../../../internal/config/token_storage.dart';
+import '../../../internal/dependencies/repository_module.dart';
 
 class _ViewModel extends ChangeNotifier {
   BuildContext context;
+
+  final _api = RepositoryModule.apiRepository();
 
   _ViewModel({required this.context}) {
     asyncInit();
   }
 
   User? _user;
-
   User? get user => _user;
-
   set user(User? val) {
     _user = val;
     notifyListeners();
   }
 
   Map<String, String>? headers;
+
+  void changeSettings() async {
+    var isOpen =
+        await _api.updateSettings(SettingsModel(isOpen: !user!.isOpen));
+    var tempuser = user;
+    tempuser?.isOpen = isOpen ?? true;
+    user = tempuser;
+  }
 
   void asyncInit() async {
     var token = await TokenStorage.getAccessToken();
@@ -63,7 +73,7 @@ class _SettingsState extends State<Settings> {
               ? SwitchListTile(
                   value: !u.isOpen,
                   onChanged: (value) {
-                    // TODO: API switch to private
+                    viewModel.changeSettings();
                   },
                   title: const Text("Private"))
               : Row(),

@@ -6,6 +6,7 @@ import 'package:project/domain/models/dynamic_post_data.dart';
 import 'package:project/domain/models/post.dart';
 
 import '../../domain/models/refresh_token_request.dart';
+import '../../domain/models/settings.dart';
 import '../../domain/models/token_request.dart';
 import '../../domain/models/token_response.dart';
 import '../../domain/models/user.dart';
@@ -112,5 +113,10 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future<String> updateStatus(String status) async {
     return await _api.updateStatus(status);
+  }
+
+  @override
+  Future<bool?> updateSettings(SettingsModel settings) async {
+    return await _api.updateSettings(settings);
   }
 }

@@ -139,7 +139,8 @@ class UserProfileWidget extends StatelessWidget {
             const Spacer()
           ],
         ),
-        Text("Account: ${viewModel.u.isOpen ? "Open" : "Private"}"),
+        if (viewModel.u.id != viewModel.user?.id)
+          Text("Account: ${viewModel.u.isOpen ? "Open" : "Private"}"),
         Text(
             "Birthday: ${DateTime.parse(viewModel.u.birthDay).day} of ${Helper.GetMonth(DateTime.parse(viewModel.u.birthDay).month.toString())} ${DateTime.parse(viewModel.u.birthDay).year}"),
         Text(
