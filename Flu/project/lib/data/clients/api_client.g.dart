@@ -282,6 +282,28 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  Future<dynamic> updateStatus(status) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'status': status};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/User/UpdateStatus',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data;
+    return value;
+  }
+
+  @override
   Future<dynamic> deleteComment(commentId) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'commentId': commentId};

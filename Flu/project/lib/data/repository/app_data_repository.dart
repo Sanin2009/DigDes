@@ -108,4 +108,9 @@ class ApiDataRepository extends ApiRepository {
   Future<List<ShowPost>> getFeed(int skip, int take) async {
     return await _api.getFeed(skip, take);
   }
+
+  @override
+  Future<String> updateStatus(String status) async {
+    return await _api.updateStatus(status);
+  }
 }

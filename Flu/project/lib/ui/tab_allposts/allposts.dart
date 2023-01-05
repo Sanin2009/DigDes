@@ -96,14 +96,13 @@ class AllPostsViewModel extends ChangeNotifier {
 }
 
 class AllPosts extends StatefulWidget {
-  const AllPosts({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
+  const AllPosts({
+    Key? key,
+  }) : super(key: key);
   static create() {
     return ChangeNotifierProvider(
       create: (BuildContext context) => AllPostsViewModel(context: context),
-      child: const AllPosts(title: "All Posts"),
+      child: const AllPosts(),
     );
   }
 

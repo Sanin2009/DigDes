@@ -96,14 +96,12 @@ class FeedViewModel extends ChangeNotifier {
 }
 
 class Feed extends StatefulWidget {
-  const Feed({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const Feed({Key? key}) : super(key: key);
 
   static create() {
     return ChangeNotifierProvider(
       create: (BuildContext context) => FeedViewModel(context: context),
-      child: const Feed(title: "Feed"),
+      child: const Feed(),
     );
   }
 

@@ -11,6 +11,7 @@ import '../helper.dart';
 
 class _ViewModel extends ChangeNotifier {
   final BuildContext context;
+  var statusTec = TextEditingController();
   User u;
 
   User? _user;
@@ -27,8 +28,18 @@ class _ViewModel extends ChangeNotifier {
     asyncInit();
   }
 
-  void asyncInit() async {
+  void updateStatus(String status) async {
+    await _api.updateStatus(status);
+    User? tempuser = user;
+    tempuser?.status = status;
+    u.status = status;
+    await SharedPrefs.setStoredUser(tempuser);
+    await asyncInit();
+  }
+
+  Future asyncInit() async {
     user = await SharedPrefs.getStoredUser();
+    statusTec.text = u.status ?? "";
   }
 }
 
@@ -130,7 +141,32 @@ class UserProfileWidget extends StatelessWidget {
               const Spacer(),
               Card(
                 child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                  title: const Text("Update status"),
+                                  content: TextField(
+                                    controller: viewModel.statusTec,
+                                    decoration: const InputDecoration(
+                                        hintText: "Status"),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          // TODO Update status
+                                          viewModel.updateStatus(
+                                              viewModel.statusTec.text);
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Update")),
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Cancel")),
+                                  ]));
+                    },
                     child: const Align(
                       alignment: Alignment.center,
                       child: Text(
