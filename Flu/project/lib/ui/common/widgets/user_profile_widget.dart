@@ -38,6 +38,16 @@ class _ViewModel extends ChangeNotifier {
     asyncInit();
   }
 
+  void updateSubscribe(String userId, bool sub) async {
+    var res = await _api.subscribe(userId, sub);
+    if (res == null) return;
+    if (res) {
+      if (sub == false) u.isSub = null;
+      if (sub) u.isSub = u.isOpen;
+    }
+    notifyListeners();
+  }
+
   void updateStatus(String status) async {
     await _api.updateStatus(status);
     User? tempuser = user;
@@ -203,7 +213,13 @@ class UserProfileWidget extends StatelessWidget {
           Card(
             child: TextButton(
                 onPressed: () {
-                  //   TODO Subscribe thingy
+                  bool t;
+                  if (viewModel.u.isSub == null) {
+                    t = true;
+                  } else {
+                    t = false;
+                  }
+                  viewModel.updateSubscribe(viewModel.u.id, t);
                 },
                 child: Align(
                     alignment: Alignment.center,
@@ -211,8 +227,7 @@ class UserProfileWidget extends StatelessWidget {
                         viewModel.u.isSub == null ? "Subscribe" : "Unsubscribe",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            color: (viewModel.u.isSub == null ||
-                                    viewModel.u.isSub == false)
+                            color: (viewModel.u.isSub == null)
                                 ? Colors.blue
                                 : Colors.red)))),
           ),

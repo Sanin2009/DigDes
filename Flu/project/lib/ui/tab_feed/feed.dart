@@ -82,7 +82,11 @@ class FeedViewModel extends ChangeNotifier {
     skip = 0;
     take = 10;
     posts = await _api.getFeed(skip, take);
-    if (posts == null || posts!.isEmpty) isEnd = true;
+    if (posts == null || posts!.isEmpty) {
+      isEnd = true;
+    } else {
+      isEnd = false;
+    }
     skip += 10;
     isLoading = false;
   }

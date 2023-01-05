@@ -97,7 +97,8 @@ class _ViewModel extends ChangeNotifier {
         email: state.login,
         password: state.password,
         retryPassword: state.passwordAgain,
-        birthDay: state.birthday);
+        birthDay:
+            (state.birthday! + "T12:00:00.811Z").toString()); //TODO костыль?
     try {
       await _api.createUser(newUser).then((value) {
         AppNavigator.toLoader()

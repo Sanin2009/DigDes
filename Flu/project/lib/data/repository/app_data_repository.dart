@@ -125,4 +125,9 @@ class ApiDataRepository extends ApiRepository {
       String inputTag, int skip, int take) async {
     return await _api.getPostsByTag(inputTag, skip, take);
   }
+
+  @override
+  Future<bool?> subscribe(String userId, bool sub) async {
+    return await _api.subscribe(userId, sub);
+  }
 }

@@ -32,4 +32,5 @@ abstract class ApiRepository {
   Future deleteComment(String commentId);
   Future deletePost(String postId);
   Future<bool?> updateSettings(SettingsModel settings);
+  Future<bool?> subscribe(String userId, bool sub);
 }

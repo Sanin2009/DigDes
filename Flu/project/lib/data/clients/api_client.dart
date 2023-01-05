@@ -56,6 +56,9 @@ abstract class ApiClient {
   @PUT("/api/User/UpdateStatus")
   Future updateStatus(@Query("status") String status);
 
+  @PUT("/api/User/Subscribe")
+  Future subscribe(@Query("userId") String userId, @Query("sub") bool sub);
+
   @DELETE("/api/Post/DeleteComment")
   Future deleteComment(@Query("commentId") String commentId);
 
