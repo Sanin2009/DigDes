@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:project/internal/config/shared_prefs.dart';
 import 'package:provider/provider.dart';
 
+import '../../../domain/enums/tab_item.dart';
 import '../../../domain/models/user.dart';
 import '../../../internal/config/app_config.dart';
 import '../../../internal/dependencies/repository_module.dart';
 import '../../navigation/app_navigator.dart';
 import '../../navigation/tab_navigator.dart';
+import '../../roots/main_app.dart';
 import '../helper.dart';
 
 class _ViewModel extends ChangeNotifier {
@@ -25,6 +27,14 @@ class _ViewModel extends ChangeNotifier {
   final _api = RepositoryModule.apiRepository();
 
   _ViewModel({required this.context, required this.u}) {
+    var appModel = context.read<AppViewModel>();
+    appModel.addListener(
+      () {
+        if (appModel.currentTab == TabItemEnum.profile) {
+          asyncInit();
+        }
+      },
+    );
     asyncInit();
   }
 
@@ -39,6 +49,7 @@ class _ViewModel extends ChangeNotifier {
 
   Future asyncInit() async {
     user = await SharedPrefs.getStoredUser();
+    if (u.id == user?.id) u = user ?? u;
     statusTec.text = u.status ?? "";
   }
 }
