@@ -123,11 +123,11 @@ class CreatePost extends StatelessWidget {
                 TextField(
                   controller: viewModel.tagTec,
                   decoration: const InputDecoration(
-                      hintText: "Insert tags separated by spaces"),
+                      hintText: "Insert tags, separated by spaces"),
                 ),
                 if (viewModel.postImages.length < 5)
                   IconButton(
-                    icon: const Icon(Icons.photo_camera_back),
+                    icon: const Icon(Icons.camera_enhance),
                     onPressed: () {
                       viewModel.addPhoto();
                     },

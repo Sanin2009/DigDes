@@ -166,7 +166,6 @@ class UserProfileWidget extends StatelessWidget {
                                   actions: [
                                     TextButton(
                                         onPressed: () {
-                                          // TODO Update status
                                           viewModel.updateStatus(
                                               viewModel.statusTec.text);
                                           Navigator.pop(context);
