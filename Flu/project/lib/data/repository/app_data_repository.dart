@@ -119,4 +119,10 @@ class ApiDataRepository extends ApiRepository {
   Future<bool?> updateSettings(SettingsModel settings) async {
     return await _api.updateSettings(settings);
   }
+
+  @override
+  Future<List<ShowPost>> getPostsByTag(
+      String inputTag, int skip, int take) async {
+    return await _api.getPostsByTag(inputTag, skip, take);
+  }
 }

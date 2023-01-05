@@ -82,6 +82,7 @@ class FeedViewModel extends ChangeNotifier {
     skip = 0;
     take = 10;
     posts = await _api.getFeed(skip, take);
+    if (posts == null || posts!.isEmpty) isEnd = true;
     skip += 10;
     isLoading = false;
   }
@@ -91,6 +92,7 @@ class FeedViewModel extends ChangeNotifier {
     var token = await TokenStorage.getAccessToken();
     headers = {"Authorization": "Bearer $token"};
     posts = await _api.getFeed(skip, take);
+    if (posts == null || posts!.isEmpty) isEnd = true;
     skip += 10;
   }
 }
@@ -134,7 +136,7 @@ class _FeedState extends State<Feed> {
               ),
             ),
             const Spacer(),
-            if (!viewModel.isLoading)
+            if (!viewModel.isLoading && !viewModel.isEnd)
               FloatingActionButton(
                 onPressed: () {
                   viewModel.addPosts();

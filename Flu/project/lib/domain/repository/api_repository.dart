@@ -21,6 +21,7 @@ abstract class ApiRepository {
   Future<List<ShowPost>> getAllPosts(int skip, int take);
   Future<List<ShowPost>> getFeed(int skip, int take);
   Future<List<ShowPost>> getUsersPosts(String userid, int skip, int take);
+  Future<List<ShowPost>> getPostsByTag(String inputTag, int skip, int take);
   Future<List<ShowCommentModel>> showComments(String postId);
   Future updateLike(String postId);
   Future<String> updateStatus(String status);
