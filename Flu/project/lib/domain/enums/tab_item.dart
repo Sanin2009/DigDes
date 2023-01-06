@@ -9,7 +9,7 @@ import '../../ui/tab_profile/profile.dart';
 enum TabItemEnum { feed, searchUser, allPosts, searchPost, profile }
 
 class TabEnums {
-  static const TabItemEnum defTab = TabItemEnum.feed;
+  static const TabItemEnum defTab = TabItemEnum.profile;
 
   static Map<TabItemEnum, IconData> tabIcon = {
     TabItemEnum.feed: Icons.home_outlined,

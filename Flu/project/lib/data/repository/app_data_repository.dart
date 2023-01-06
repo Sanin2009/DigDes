@@ -130,4 +130,9 @@ class ApiDataRepository extends ApiRepository {
   Future<bool?> subscribe(String userId, bool sub) async {
     return await _api.subscribe(userId, sub);
   }
+
+  @override
+  Future<List<User>> searchUsers(String name) async {
+    return await _api.searchUser(name);
+  }
 }

@@ -23,7 +23,7 @@ class _ViewModelState {
 
 class _ViewModel extends ChangeNotifier {
   BuildContext context;
-  var searchUserTec = TextEditingController();
+  var searchPostTec = TextEditingController();
 
   final _api = RepositoryModule.apiRepository();
 
@@ -61,8 +61,8 @@ class _ViewModel extends ChangeNotifier {
 
   _ViewModel({required this.context}) {
     posts = null;
-    searchUserTec.addListener(() {
-      state = state.copyWith(search: searchUserTec.text);
+    searchPostTec.addListener(() {
+      state = state.copyWith(search: searchPostTec.text);
     });
   }
 
@@ -129,13 +129,13 @@ class SearchPost extends StatelessWidget {
             Column(
               children: [
                 TextField(
-                    controller: viewModel.searchUserTec,
+                    controller: viewModel.searchPostTec,
                     decoration: const InputDecoration(hintText: "tag")),
                 Card(
                   child: IconButton(
                     icon: const Icon(Icons.search),
                     onPressed: () {
-                      viewModel.search(viewModel.searchUserTec.text);
+                      viewModel.search(viewModel.searchPostTec.text);
                     },
                   ),
                 ),
@@ -151,7 +151,7 @@ class SearchPost extends StatelessWidget {
                   if (!viewModel.isLoading && !viewModel.isEnd)
                     FloatingActionButton(
                       onPressed: () {
-                        viewModel.addPosts(viewModel.searchUserTec.text);
+                        viewModel.addPosts(viewModel.searchPostTec.text);
                       },
                       child: const Icon(Icons.h_plus_mobiledata),
                     ),

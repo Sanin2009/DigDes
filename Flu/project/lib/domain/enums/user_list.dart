@@ -1,0 +1,1 @@
+enum UserListTypeEnum { look, manage }
