@@ -135,4 +135,9 @@ class ApiDataRepository extends ApiRepository {
   Future<List<User>> searchUsers(String name) async {
     return await _api.searchUser(name);
   }
+
+  @override
+  Future<List<User>> getSubscriptions(String subscriberId) async {
+    return await _api.getSubscriptions(subscriberId);
+  }
 }

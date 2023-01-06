@@ -38,6 +38,10 @@ abstract class ApiClient {
   @GET("/api/User/SearchUsers")
   Future<List<User>> searchUser(@Query("name") String name);
 
+  @GET("/api/User/GetSubscriptions")
+  Future<List<User>> getSubscriptions(
+      @Query("subscriberId") String subscriberId);
+
   @GET("/api/Post/GetUsersPosts")
   Future<List<ShowPost>> getUsersPosts(@Query("userId") String userid,
       @Query("skip") int skip, @Query("take") int take);

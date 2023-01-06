@@ -56,25 +56,25 @@ namespace Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task <List<UserModel>> GetSubscriptions()
+        public async Task <List<UserModel>> GetSubscriptions(Guid subscriberId)
         {
-            var subscriberId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            //var subscriberId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _userService.GetSubscriptions(subscriberId);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<List<UserModel>> GetSubscribers()
+        public async Task<List<UserModel>> GetSubscribers(Guid userId)
         {
-            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            //var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _userService.GetSubscribers(userId);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<List<UserModel>> GetSubRequests()
+        public async Task<List<UserModel>> GetSubRequests(Guid userId)
         {
-            var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
+            //var userId = User.GetClaimValue<Guid>(ClaimNames.Id);
             return await _userService.GetSubRequests(userId);
         }
 

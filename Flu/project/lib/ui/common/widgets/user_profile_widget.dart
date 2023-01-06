@@ -57,6 +57,16 @@ class _ViewModel extends ChangeNotifier {
     await asyncInit();
   }
 
+  void toUserSubscriptions(User user) async {
+    var users = await _api.getSubscriptions(user.id);
+    toUserSubscribersNavigation(users);
+  }
+
+  void toUserSubscribersNavigation(List<User>? users) {
+    Navigator.of(context)
+        .pushNamed(TabNavigatorRoutes.userSubscribers, arguments: users);
+  }
+
   Future asyncInit() async {
     user = await SharedPrefs.getStoredUser();
     if (u.id == user?.id) u = user ?? u;
@@ -125,7 +135,9 @@ class UserProfileWidget extends StatelessWidget {
           children: [
             const Spacer(),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  viewModel.toUserSubscriptions(viewModel.u);
+                },
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
