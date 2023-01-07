@@ -14,8 +14,8 @@ class UserListWidget extends StatelessWidget {
 
   void toUserProfile(User user, BuildContext context) async {
     var newuser = await _api.getUserById(user.id);
-    Navigator.of(context)
-        .pushNamed(TabNavigatorRoutes.userProfile, arguments: newuser); // TODO
+    Navigator.of(context).pushNamed(TabNavigatorRoutes.userProfile,
+        arguments: newuser); // Вроде не ломается
   }
 
   @override

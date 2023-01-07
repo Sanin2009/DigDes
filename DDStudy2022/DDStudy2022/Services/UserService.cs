@@ -141,6 +141,7 @@ namespace Api.Services
             {
                 Id = u.Id,
                 Name = u.Name,
+                Email = u.Email,
                 AvatarLink = LinkHelper.Avatar(u.Id),
                 LastActive = u.LastActive,
                 Status = u.Status,
@@ -160,6 +161,7 @@ namespace Api.Services
             {
                 Id = u.Id,
                 Name = u.Name,
+                Email = u.Email,
                 AvatarLink = LinkHelper.Avatar(u.Id),
                 LastActive = u.LastActive,
                 Status = u.Status,

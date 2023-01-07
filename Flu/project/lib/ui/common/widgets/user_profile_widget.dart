@@ -64,7 +64,7 @@ class _ViewModel extends ChangeNotifier {
 
   void toUserSubscribersNavigation(List<User>? users) {
     Navigator.of(context)
-        .pushNamed(TabNavigatorRoutes.userSubscribers, arguments: users);
+        .pushNamed(TabNavigatorRoutes.userSubscriptions, arguments: users);
   }
 
   Future asyncInit() async {
@@ -152,7 +152,11 @@ class UserProfileWidget extends StatelessWidget {
           children: [
             const Spacer(),
             TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                      TabNavigatorRoutes.userSubscribers,
+                      arguments: viewModel.u.id);
+                },
                 child: Align(
                   alignment: Alignment.center,
                   child: Text("Subscribers: ${viewModel.u.totalSubs}",

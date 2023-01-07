@@ -23,6 +23,8 @@ abstract class ApiRepository {
   Future<List<ShowPost>> getUsersPosts(String userid, int skip, int take);
   Future<List<User>> searchUsers(String name);
   Future<List<User>> getSubscriptions(String subscriberId);
+  Future<List<User>> getSubscribers(String userId);
+  Future<List<User>> getSubRequests(String userId);
   Future<List<ShowPost>> getPostsByTag(String inputTag, int skip, int take);
   Future<List<ShowCommentModel>> showComments(String postId);
   Future updateLike(String postId);

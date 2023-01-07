@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:project/ui/common/screens/user_posts.dart';
 import 'package:project/ui/common/screens/user_profile.dart';
+import 'package:project/ui/common/screens/user_subscribers.dart';
 import 'package:project/ui/common/screens/user_subscriptions.dart';
 
 import '../../domain/enums/tab_item.dart';
@@ -12,6 +13,8 @@ class TabNavigatorRoutes {
   static const String userProfile = "/app/userProfile";
   static const String userPosts = "/app/userPosts";
   static const String userSubscribers = "/app/userSubscribers";
+
+  static const String userSubscriptions = "/app/userSubscriptions";
 }
 
 class TabNavigator extends StatelessWidget {
@@ -34,8 +37,10 @@ class TabNavigator extends StatelessWidget {
         TabNavigatorRoutes.postDetails: (context) => PostDetail.create(arg),
         TabNavigatorRoutes.userProfile: (context) => UserProfile.create(arg),
         TabNavigatorRoutes.userPosts: (context) => UserPosts.create(arg),
-        TabNavigatorRoutes.userSubscribers: (context) =>
+        TabNavigatorRoutes.userSubscriptions: (context) =>
             SubscriptionList.create(arg),
+        TabNavigatorRoutes.userSubscribers: (context) =>
+            UserSubscribers.create(arg),
       };
 
   @override
