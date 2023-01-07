@@ -120,7 +120,6 @@ namespace Api.Services
         {
             var user = await _context.Users.Where(x => x.Name.ToLower() == name.ToLower()).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
             if (user==null) throw new NotFound("user");
-            //var user = await GetUserById(userid);
             var sub = await _context.Subscribers.FirstOrDefaultAsync(x => (x.SubscriberId == subId) && (x.UserId == user[0].Id));
             bool? isSub = sub?.IsSubscribed;
             user[0].isSub = isSub;
@@ -145,6 +144,7 @@ namespace Api.Services
                 AvatarLink = LinkHelper.Avatar(u.Id),
                 LastActive = u.LastActive,
                 Status = u.Status,
+                IsOpen = u.IsOpen,
             });
             var result = new List<UserModel>();
             foreach (var sub in subs)
@@ -165,6 +165,7 @@ namespace Api.Services
                 AvatarLink = LinkHelper.Avatar(u.Id),
                 LastActive = u.LastActive,
                 Status = u.Status,
+                IsOpen = u.IsOpen,
             });
             var result = new List<UserModel>();
             foreach (var sub in subs)

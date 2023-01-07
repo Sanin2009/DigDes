@@ -38,17 +38,65 @@ class _ViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  //Image? _avatar;
-  //Image? get avatar => _avatar;
-  //set avatar(Image? val) {
-  //  _avatar = val;
-  //  notifyListeners();
-  // }
+  void acceptSub(User user) async {
+    var t = await _api.updateSubRequests(user.id, true);
+    if (t) {
+      await removeSubFromList(user);
+      List<User> tempuser = <User>[user];
+      subscribers = <User>[...?subscribers, ...tempuser];
+    }
+  }
+
+  void toUserProfile(User user) async {
+    var newuser = await _api.getUserById(user.id);
+    toUserProfileNavigation(newuser);
+  }
+
+  void toUserProfileNavigation(User? user) {
+    Navigator.of(context)
+        .pushNamed(TabNavigatorRoutes.userProfile, arguments: user);
+  }
+
+  void declineSub(User user) async {
+    var t = await _api.updateSubRequests(user.id, false);
+    if (t) {
+      await removeSubFromList(user);
+    }
+  }
+
+  Future removeSubFromList(User user) async {
+    List<User>? tempUsers;
+    if (subscribers != null) {
+      for (int i = 0; i < subscribers!.length; i++) {
+        if (subscribers![i].id != user.id) {
+          if (tempUsers == null) {
+            tempUsers = <User>[subscribers![i]];
+          } else {
+            tempUsers.add(subscribers![i]);
+          }
+        }
+      }
+      subscribers = tempUsers;
+    }
+
+    tempUsers = null;
+    if (pendingSubscribers != null) {
+      for (int i = 0; i < pendingSubscribers!.length; i++) {
+        if (pendingSubscribers![i].id != user.id) {
+          if (tempUsers == null) {
+            tempUsers = <User>[pendingSubscribers![i]];
+          } else {
+            tempUsers.add(pendingSubscribers![i]);
+          }
+        }
+      }
+      pendingSubscribers = tempUsers;
+    }
+  }
 
   Map<String, String>? headers;
 
   void asyncInit(String userId) async {
-    // TODO
     user = await SharedPrefs.getStoredUser();
     var token = await TokenStorage.getAccessToken();
     headers = {"Authorization": "Bearer $token"};
@@ -97,7 +145,7 @@ class _UserSubscribersState extends State<UserSubscribers> {
         itemBuilder: (listContext, listIndex) {
           var subs = viewModel.subscribers;
           var subRequests = viewModel.pendingSubscribers;
-          if (itemCount == 0) return SizedBox.shrink();
+          if (itemCount == 0) return const SizedBox.shrink();
           Widget res;
           User user;
           if ((subs?.length ?? 0) > listIndex) {
@@ -112,8 +160,9 @@ class _UserSubscribersState extends State<UserSubscribers> {
             color: Colors.white,
             child: Column(
               children: [
-                if (listIndex == 0 && (subs?.length != 0)) Text("Subscribers"),
-                if (listIndex == subs?.length) Text("Subscribe requests"),
+                if (listIndex == 0 && (subs?.length != 0))
+                  const Text("Subscribers"),
+                if (listIndex == subs?.length) const Text("Subscribe requests"),
                 Row(
                   children: [
                     GestureDetector(
@@ -128,15 +177,32 @@ class _UserSubscribersState extends State<UserSubscribers> {
                         ),
                       ),
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                            TabNavigatorRoutes.userProfile,
-                            arguments: user);
+                        viewModel.toUserProfile(user);
                       },
                     ),
                     Expanded(
                       flex: 8,
                       child: Text(" ${user.name}    ${user.status ?? ""}"),
                     ),
+                    if (viewModel.user!.id == viewModel.userid &&
+                        (subs?.length ?? 0) <= listIndex)
+                      Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            icon: const Icon(Icons.check),
+                            onPressed: () {
+                              viewModel.acceptSub(user);
+                            },
+                          )),
+                    if (viewModel.user!.id == viewModel.userid)
+                      Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            icon: const Icon(Icons.delete_forever),
+                            onPressed: () {
+                              viewModel.declineSub(user);
+                            },
+                          )),
                   ],
                 ),
               ],
