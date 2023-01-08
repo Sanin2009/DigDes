@@ -54,7 +54,9 @@ class _ViewModel extends ChangeNotifier {
   }
 
   bool checkFields() {
-    return (state.comment?.isNotEmpty ?? false);
+    if (!(state.comment?.isNotEmpty ?? false)) return false;
+    if (commentTec.text.length < 51) return true;
+    return false;
   }
 
   void updateLike(String postId) async {
@@ -90,6 +92,9 @@ class _ViewModel extends ChangeNotifier {
     await _api.addComment(post.showPostModel.id, commentTec.text);
     commentTec.text = "";
     comments = await _api.showComments(post.showPostModel.id);
+    const SnackBar(
+      content: Text("Comment added."),
+    );
   }
 
   Future deleteComment(String commentId) async {
@@ -292,7 +297,6 @@ class PostDetail extends StatelessWidget {
                                                                               comment.id,
                                                                               commentTec.text);
                                                                         }
-                                                                        // TODO
                                                                         Navigator.pop(
                                                                             context);
                                                                       },

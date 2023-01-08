@@ -84,7 +84,12 @@ class _ViewModel extends ChangeNotifier {
         (state.name?.isNotEmpty ?? false) &&
         (state.birthday?.isNotEmpty ?? false) &&
         (state.name!.length > 3) &&
+        (!state.name!.contains(" ")) &&
+        (!state.login!.contains(" ")) &&
+        (state.name!.length < 24) &&
         (state.login!.length > 3) &&
+        (state.login!.length < 24) &&
+        (state.birthday!.length == 10) &&
         (state.password!.length > 3) &&
         (state.password == state.passwordAgain);
   }
@@ -158,7 +163,10 @@ class Register extends StatelessWidget {
                 if (viewModel.state.isLoading)
                   const CircularProgressIndicator(),
                 if (viewModel.state.errorText != null)
-                  Text(viewModel.state.errorText!)
+                  Text(
+                    viewModel.state.errorText!,
+                    style: const TextStyle(color: Colors.red),
+                  )
               ],
             ),
           ),

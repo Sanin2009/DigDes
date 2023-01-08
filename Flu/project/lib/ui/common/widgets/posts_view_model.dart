@@ -233,6 +233,7 @@ class PostsViewModel extends StatelessWidget {
                     itemBuilder: (pageContext, pageIndex) => Column(
                       children: [
                         Expanded(
+                            child: GestureDetector(
                           child: Container(
                             color: Colors.white,
                             child: Image(
@@ -240,7 +241,8 @@ class PostsViewModel extends StatelessWidget {
                               "$baseUrl${post.showPostModel.attaches![pageIndex]}",
                             )),
                           ),
-                        ),
+                          onDoubleTap: () => viewModel.toPostDetail(post),
+                        )),
                       ],
                     ),
                   ),

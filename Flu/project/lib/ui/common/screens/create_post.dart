@@ -136,7 +136,11 @@ class CreatePost extends StatelessWidget {
                 if (viewModel.postImages.length >= 5)
                   const Text("Limit of images reached"),
                 ElevatedButton(
-                    onPressed: viewModel.createPost,
+                    onPressed: ((viewModel.titleTec.text.isNotEmpty ||
+                                viewModel.postImages.isNotEmpty) &&
+                            viewModel.titleTec.text.length < 50)
+                        ? viewModel.createPost
+                        : null,
                     child: const Text("Create Post")),
                 if (viewModel.state.isLoading)
                   const CircularProgressIndicator(),

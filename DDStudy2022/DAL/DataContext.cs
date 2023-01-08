@@ -30,6 +30,8 @@ namespace DAL
 
             modelBuilder.Entity<PostLike>()
                 .HasKey(p => new { p.UserId, p.UserPostId });
+            modelBuilder.Entity<UserPost>()
+                .HasIndex(f => f.Created);
 
         }
 

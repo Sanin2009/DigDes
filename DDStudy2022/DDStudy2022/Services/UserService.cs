@@ -103,8 +103,8 @@ namespace Api.Services
 
         public async Task<List<UserModel>> GetUsers(string? name)
         {
-            if (name == null) return await _context.Users.Where(x=>x.IsActive==true).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
-            else return await _context.Users.Where(x=>(x.Name.ToLower().Contains(name.ToLower())) && (x.IsActive == true)).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            if (name == null) return await _context.Users.Where(x=>x.IsActive==true).OrderBy(x=>x.Name).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
+            else return await _context.Users.Where(x=>(x.Name.ToLower().Contains(name.ToLower())) && (x.IsActive == true)).OrderBy(x => x.Name).AsNoTracking().ProjectTo<UserModel>(_mapper.ConfigurationProvider).ToListAsync();
         }
 
         public async Task<UserModel> GetUser(Guid subId, Guid userid)

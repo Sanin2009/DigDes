@@ -191,6 +191,8 @@ namespace Api.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Created");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("UserPosts");
@@ -291,7 +293,7 @@ namespace Api.Migrations
             modelBuilder.Entity("DAL.Entities.Subscriber", b =>
                 {
                     b.HasOne("DAL.Entities.User", "Users")
-                        .WithMany()
+                        .WithMany("Subscribers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -372,6 +374,8 @@ namespace Api.Migrations
                     b.Navigation("PostLikes");
 
                     b.Navigation("Sessions");
+
+                    b.Navigation("Subscribers");
 
                     b.Navigation("UserPosts");
                 });
