@@ -155,4 +155,9 @@ class ApiDataRepository extends ApiRepository {
   Future<bool> updateSubRequests(String subscriberId, bool upd) async {
     return await _api.updateSubRequests(subscriberId, upd);
   }
+
+  @override
+  Future editComment(String commentId, String msg) async {
+    await _api.editComment(commentId, msg);
+  }
 }

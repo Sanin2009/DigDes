@@ -46,6 +46,10 @@ abstract class ApiClient {
   Future<bool> updateSubRequests(
       @Query("subscriberId") String subscriberId, @Query("upd") bool upd);
 
+  @PUT("/api/Post/EditComment")
+  Future editComment(
+      @Query("commentId") String commentId, @Query("msg") String msg);
+
   @GET("/api/User/GetSubscribers")
   Future<List<User>> getSubscribers(@Query("userId") String userId);
 

@@ -97,6 +97,11 @@ class _ViewModel extends ChangeNotifier {
     comments = await _api.showComments(post.showPostModel.id);
   }
 
+  Future editComment(String commentId, String msg) async {
+    await _api.editComment(commentId, msg);
+    comments = await _api.showComments(post.showPostModel.id);
+  }
+
   void toUserProfile(String userid) async {
     var newuser = await _api.getUserById(userid);
     if (newuser != null) toUserProfileNavigation(newuser);
@@ -248,6 +253,63 @@ class PostDetail extends StatelessWidget {
                                               child: Text(
                                                   "${comment.name}: ${comment.message}"),
                                             ),
+                                            if ((viewModel.user?.name) ==
+                                                comment.name)
+                                              Expanded(
+                                                flex: 1,
+                                                child: IconButton(
+                                                  icon: const Icon(Icons.edit),
+                                                  onPressed: () {
+                                                    var commentTec =
+                                                        TextEditingController();
+                                                    commentTec.text =
+                                                        comment.message;
+                                                    showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            AlertDialog(
+                                                                title: const Text(
+                                                                    "Edit comment"),
+                                                                content:
+                                                                    TextField(
+                                                                  controller:
+                                                                      commentTec,
+                                                                  decoration:
+                                                                      const InputDecoration(
+                                                                          hintText:
+                                                                              "your comment"),
+                                                                ),
+                                                                actions: [
+                                                                  TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        if (commentTec.text ==
+                                                                            "") {
+                                                                          viewModel
+                                                                              .deleteComment(comment.id);
+                                                                        } else {
+                                                                          viewModel.editComment(
+                                                                              comment.id,
+                                                                              commentTec.text);
+                                                                        }
+                                                                        // TODO
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Edit")),
+                                                                  TextButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        Navigator.pop(
+                                                                            context);
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Cancel")),
+                                                                ]));
+                                                  },
+                                                ),
+                                              ),
                                             if ((viewModel.user?.id) ==
                                                     viewModel
                                                         .post.userModel.id ||
