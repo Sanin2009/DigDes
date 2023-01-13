@@ -135,8 +135,7 @@ namespace Api.Services
 
         public async Task<List<UserModel>> GetSubscribers(Guid userId)
         {
-            // было бы неплохо знать как сделать это асинхронно
-            var subs = _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed)).Join(_context.Users, s => s.SubscriberId, u => u.Id, (s, u) => new UserModel
+            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed)).Join(_context.Users, s => s.SubscriberId, u => u.Id, (s, u) => new UserModel
             {
                 Id = u.Id,
                 Name = u.Name,
@@ -145,19 +144,13 @@ namespace Api.Services
                 LastActive = u.LastActive,
                 Status = u.Status,
                 IsOpen = u.IsOpen,
-            });
-            var result = new List<UserModel>();
-            foreach (var sub in subs)
-            {
-                result.Add(sub);
-            }
-            return result;
+            }).ToListAsync();
+            return subs;
         }
 
         public async Task<List<UserModel>> GetSubRequests(Guid userId)
         {
-            // и тут тоже
-            var subs = _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed==false)).Join(_context.Users, s => s.SubscriberId, u => u.Id, (s, u) => new UserModel
+            var subs = await _context.Subscribers.Where(x => (x.UserId == userId) && (x.IsSubscribed==false)).Join(_context.Users, s => s.SubscriberId, u => u.Id, (s, u) => new UserModel
             {
                 Id = u.Id,
                 Name = u.Name,
@@ -166,13 +159,8 @@ namespace Api.Services
                 LastActive = u.LastActive,
                 Status = u.Status,
                 IsOpen = u.IsOpen,
-            });
-            var result = new List<UserModel>();
-            foreach (var sub in subs)
-            {
-                result.Add(sub);
-            }
-            return result;
+            }).ToListAsync();
+            return subs;
         }
         public async Task<int> GetUsersTotalSubs(Guid userId)
         {
